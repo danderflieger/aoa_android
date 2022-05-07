@@ -1,5 +1,7 @@
 # Angle of Attack Indicator Code Base
-This repository is for the Angle of Attack Indicator, which runs on an Android device. This code is posted here for those with a desire to modify or customize it for their own use. If you know what to do with it, you probably understand how to create your own branch and update it however you wish. It's open source, so feel free to improve it for your own use. Regardless of whether you use my code directly or change it for your own purposes, you do so at your own risk and the risk of your passengers. You, as pilot in command, have ultimate reponsibility for the safe outcome of every flight. If you find an error in the code, or have a better way to do something, feel free to create an issue and add lots of details. I may or may not do something about it. 
+This repository is for the Angle of Attack Indicator, which runs on an Android device. This code is posted here for those with a desire to modify or customize it for their own use. If you know what to do with it, you probably understand how to create your own branch and update it however you wish. It's open source, so feel free to improve it for your own use. Regardless of whether you use my code directly or change it for your own purposes, you do so at your own risk and the risk of your passengers. You, as pilot in command, have ultimate reponsibility for the safe outcome of every flight. 
+
+If you find an issue with the code (or simply have a better way to do something), feel free to create an issue and add a lot of details. I may or may not do something about it. 
 
 # Disclaimer:
 By using this Angle of Attack Sensor (sensor) and/or Angle of Attack Indicator software (indicator), you agree with the following:
