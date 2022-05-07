@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="200mm"
+   height="200mm"
+   viewBox="0 0 200 200"
+   version="1.1"
+   id="svg4838"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="airfoil.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview4840"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     width="200mm"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="598.91944"
+     inkscape:cy="582.65599"
+     inkscape:window-width="1718"
+     inkscape:window-height="1368"
+     inkscape:window-x="1713"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
+    <sodipodi:guide
+       position="100.0001,245.83493"
+       orientation="1,0"
+       id="guide4842" />
+    <sodipodi:guide
+       position="-102.26146,99.999902"
+       orientation="0,-1"
+       id="guide4844" />
+    <sodipodi:guide
+       position="63.103124,89.933333"
+       orientation="0,-1"
+       id="guide6285" />
+    <sodipodi:guide
+       position="66.807291,109.90937"
+       orientation="0,-1"
+       id="guide6287" />
+    <sodipodi:guide
+       position="20.108333,162.82604"
+       orientation="1,0"
+       id="guide6521" />
+    <sodipodi:guide
+       position="179.99099,177.09333"
+       orientation="1,0"
+       id="guide6523" />
+  </sodipodi:namedview>
+  <defs
+     id="defs4835" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ff9955;stroke:#aa4400;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 179.99099,100.0001 c 0,0 -159.882657,-9.909471 -159.882657,0 0,10.06657 159.882657,0 159.882657,0 z"
+       id="path4966"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 51.064583,88.635416 Z"
+       id="path4968" />
+  </g>
+</svg>

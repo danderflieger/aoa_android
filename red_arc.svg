@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="200mm"
+   height="200mm"
+   viewBox="0 0 200 200"
+   version="1.1"
+   id="svg926"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="red_arc.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview928"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="false"
+     inkscape:document-units="mm"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="0.5"
+     inkscape:cx="267"
+     inkscape:cy="142"
+     inkscape:window-width="1718"
+     inkscape:window-height="1368"
+     inkscape:window-x="-7"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
+    <sodipodi:guide
+       position="99.999063,199.93695"
+       orientation="1,0"
+       id="guide1041" />
+    <sodipodi:guide
+       position="10.029362,100.00094"
+       orientation="0,-1"
+       id="guide1043" />
+  </sodipodi:namedview>
+  <defs
+     id="defs923" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;stroke:#ff3333;stroke-width:10;stroke-miterlimit:4.19999981;stroke-dasharray:none;stroke-opacity:1"
+       id="path1093"
+       sodipodi:type="arc"
+       sodipodi:cx="99.999062"
+       sodipodi:cy="99.999062"
+       sodipodi:rx="91.28125"
+       sodipodi:ry="91.28125"
+       sodipodi:start="3.1417157"
+       sodipodi:end="4.7125121"
+       sodipodi:arc-type="arc"
+       d="M 8.7178123,99.98783 A 91.28125,91.28125 0 0 1 35.461416,35.445527 91.28125,91.28125 0 0 1 100.0103,8.7178123"
+       sodipodi:open="true" />
+  </g>
+</svg>

@@ -1,0 +1,60 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="520dp"
+    android:viewportWidth="220"
+    android:viewportHeight="520">
+  <path
+      android:name="backgroundPath"
+      android:pathData="M25.123,20.595h184.951v488.753h-184.951z"
+      android:fillColor="#444444" />
+  <path
+      android:name="NegativeAngle"
+      android:pathData="M32.519,345.433L202.608,345.433v14.977L32.519,360.41Z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="2"
+      android:fillColor="#22ffff33"
+      android:strokeColor="#777700"
+      android:strokeLineCap="butt"/>
+  <path
+      android:name="LevelCruiseAngle"
+      android:pathData="M32.519,320.392L202.608,320.392v15.025L32.519,335.417Z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="2"
+      android:fillColor="#2244ff44"
+      android:strokeColor="#336633"
+      android:strokeLineCap="butt"/>
+
+  <path
+      android:name="UpperGlidePathAngle"
+      android:pathData="m77.498,268.43c0,0 0,-37.969 40.067,-37.911 39.875,0.057 39.875,37.911 39.875,37.911h-13.889c0,0 0,-22.952 -25.988,-22.952 -25.863,0 -25.863,22.952 -25.863,22.952z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="2"
+      android:fillColor="#224499ff"
+      android:strokeColor="#005599"
+      android:strokeLineCap="butt"/>
+  <path
+      android:name="LowerGlidePathAngle"
+      android:pathData="m77.498,272.439c0,0 0,38.019 40.065,38.037 39.876,0.018 39.876,-38.037 39.876,-38.037v0h-13.889c0,0 0,25.558 -26.023,25.644 -25.827,0.086 -25.827,-25.644 -25.827,-25.644z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="2"
+      android:fillColor="#224499ff"
+      android:strokeColor="#005599"
+      android:strokeLineCap="butt"/>
+
+  <path
+      android:name="WarningAngle"
+      android:pathData="M117.564,220.37 L32.519,185.219L32.519,170.099l85.045,35.152 85.045,-35.152v15.119z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="2"
+      android:fillColor="#22ffff33"
+      android:strokeColor="#777733"
+      android:strokeLineCap="butt"/>
+  <path
+      android:name="DangerAngle"
+      android:pathData="m32.519,160.888 l85.045,34.536 85.045,-34.536v0l-45.168,0L157.44,147.524L77.498,147.524v13.363z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="2"
+      android:fillColor="#22ff0000"
+      android:strokeColor="#9d0000"
+      android:strokeLineCap="butt"/>
+</vector>

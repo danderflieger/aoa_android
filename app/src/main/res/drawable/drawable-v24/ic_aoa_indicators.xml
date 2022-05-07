@@ -1,0 +1,53 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:width="210dp"
+    android:height="297dp"
+    android:viewportWidth="210"
+    android:viewportHeight="297">
+
+  <path
+      android:name="DangerAngle"
+      android:pathData="M84.371,35.871H115.33v18.221h30.959L100.021,91.856 53.753,54.093h30.619z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1"
+      android:strokeColor="#700"
+      android:fillColor="#2F00"
+      android:strokeLineCap="butt"/>
+  <path
+      android:name="WarningAngle"
+      android:pathData="M53.753,63.066 L100.021,102.19 146.289,63.066V81.437L100.021,120.561 53.753,81.437Z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1"
+      android:strokeColor="#770"
+      android:fillColor="#2ff3"
+      android:strokeLineCap="butt"/>
+
+  <path
+      android:name="UpperGlidePathAngle"
+      android:pathData="m68.381,158.876c0,0 0,-30.747 32.04,-30.747 31.238,0 31.238,30.747 31.238,30.747H115.33c0,0 0,-15.612 -15.309,-15.612 -15.649,0 -15.649,15.612 -15.649,15.612z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1.5"
+      android:strokeColor="#059"
+      android:fillColor="#249f"
+      android:strokeLineCap="butt"/>
+  <path
+      android:name="LowerGlidePathAngle"
+      android:pathData="m131.66,162.366c0,0 0,30.747 -32.04,30.747 -31.238,0 -31.238,-30.747 -31.238,-30.747h16.33c0,0 0,15.612 15.309,15.612 15.649,0 15.309,-15.612 15.309,-15.612z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1.5"
+      android:strokeColor="#059"
+      android:fillColor="#249f"
+      android:strokeLineCap="butt"/>
+  <path
+      android:name="LevelCruiseAngle"
+      android:pathData="M53.753,198.851h92.536v12.588h-92.536z"
+      android:strokeWidth="1"
+      android:strokeColor="#363"
+      android:fillColor="#24f4"/>
+  <path
+      android:name="NegativeAngle"
+      android:pathData="M53.753,218.582h92.536v12.588h-92.536z"
+      android:strokeWidth="1"
+      android:strokeColor="#770"
+      android:fillColor="#2ff3"/>
+</vector>

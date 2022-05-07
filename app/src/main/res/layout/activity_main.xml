@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/sensorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ButtonView"
+        android:layout_marginBottom="0dp"
+        android:background="@color/dark_blue"
+        android:visibility="visible">
+
+        <Button
+            android:id="@+id/startScanningButton"
+            android:layout_width="150dp"
+            android:layout_height="90dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:backgroundTint="@color/light_blue"
+            android:text="Start Scanning"/>
+
+        <Button
+            android:id="@+id/stopScanningButton"
+            android:layout_width="150dp"
+            android:layout_height="90dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/light_blue"
+            android:text="Stop Scanning"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/ConnectButton"
+            android:layout_width="150dp"
+            android:layout_height="90dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:enabled="false"
+            android:text="Connect"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:backgroundTint="@color/light_blue"
+            tools:ignore="NotSibling" />
+
+        <Button
+            android:id="@+id/DisconnectButton"
+            android:layout_width="150dp"
+            android:layout_height="90dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/light_blue"
+            android:text="Disconnect"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="NotSibling" />
+
+        <Spinner
+            android:id="@+id/deviceSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/ConnectButton"
+            android:layout_margin="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:backgroundTint="@color/white"/>
+
+        <TextView
+            android:id="@+id/ConnectionInformationTextView"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_below="@+id/deviceSpinner"
+            android:text="Connection Information"
+            android:paddingBottom="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <TextView
+            android:id="@+id/peripheralTextView"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_below="@+id/ConnectionInformationTextView"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/light_gray"
+            android:textColor="@color/dark_gray"
+            android:padding="5dp"
+            android:text="" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/aircraftLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ButtonView"
+        android:layout_marginBottom="0dp"
+        android:background="@color/dark_yellow"
+        android:visibility="gone">
+
+
+        <TextView
+            android:id="@+id/SelectAircraftCaption"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Select an Aircraft"
+            android:textSize="20dp" />
+
+        <Spinner
+            android:id="@+id/aircraftSpinner"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/SelectAircraftCaption"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/dark_blue"
+            android:minHeight="48dp"
+            android:spinnerMode="dropdown"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Switch
+            android:id="@+id/editAircraftSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_alignTop="@id/aircraftSpinner"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:checked="false"
+            android:text="Edit/Save" />
+
+        <TextView
+            android:id="@+id/currentAngleCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/aircraftSpinner"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Current Angle"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/currentAngle"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignBaseline="@id/currentAngleCaption"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/levelFlightUpdateButton"
+            android:enabled="false"
+            android:inputType="numberDecimal|numberSigned"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <!-- Level Flight Controls -->
+        <TextView
+            android:id="@+id/levelFlightCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/currentAngleCaption"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="35dp"
+            android:text="Level Angle"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/levelFlight"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignTop="@id/levelFlightUpdateButton"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/levelFlightUpdateButton"
+            android:enabled="false"
+            android:inputType="numberDecimal|numberSigned"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/levelFlightUpdateButton"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_alignBaseline="@+id/levelFlightCaption"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/light_blue"
+            android:enabled="false"
+            android:text="Set Current"
+            android:textSize="12dp"/>
+
+
+        <!-- Descent Angle Controls -->
+        <TextView
+            android:id="@+id/descentAngleCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/levelFlightUpdateButton"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="25dp"
+            android:text="Descent Angle"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/descentAngle"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignTop="@id/descentAngleUpdateButton"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/descentAngleUpdateButton"
+            android:enabled="false"
+            android:inputType="numberDecimal|numberSigned"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/descentAngleUpdateButton"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_alignBaseline="@+id/descentAngleCaption"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/light_blue"
+            android:enabled="false"
+            android:text="Use Current"
+            android:textSize="12dp"/>
+
+
+        <!-- Warning Angle Controls -->
+        <TextView
+            android:id="@+id/warningAngleCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/descentAngleUpdateButton"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="25dp"
+            android:text="Warning Angle"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/warningAngle"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignTop="@id/warningAngleUpdateButton"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/warningAngleUpdateButton"
+            android:enabled="false"
+            android:inputType="numberDecimal|numberSigned"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/warningAngleUpdateButton"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_alignBaseline="@+id/warningAngleCaption"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/light_blue"
+            android:enabled="false"
+            android:text="Use Current"
+            android:textSize="12dp"/>
+
+
+        <!-- Danger Angle Controls -->
+        <TextView
+            android:id="@+id/dangerAngleCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/warningAngleUpdateButton"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="25dp"
+            android:text="Danger Angle"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/dangerAngle"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignTop="@id/dangerAngleUpdateButton"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/dangerAngleUpdateButton"
+            android:enabled="false"
+            android:inputType="numberDecimal|numberSigned"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/dangerAngleUpdateButton"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_alignBaseline="@+id/dangerAngleCaption"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/light_blue"
+            android:enabled="false"
+            android:text="Use Current"
+            android:textSize="12dp"/>
+
+
+        <!-- Add Aircraft-->
+        <TextView
+            android:id="@+id/aircraftIdCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/addNewAircraftId"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="-5dp"
+            android:text="Aircraft ID"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/addNewAircraftId"
+            android:layout_width="130dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="0dp"
+            android:hint="N12345"
+            android:inputType="text|textCapCharacters"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/addAircraftButton"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_alignBaseline="@+id/addNewAircraftId"
+            android:layout_alignParentEnd="false"
+            android:layout_toRightOf="@+id/addNewAircraftId"
+            android:layout_marginStart="5dp"
+            android:backgroundTint="@color/dark_blue"
+            android:text="Add" />
+
+        <Button
+            android:id="@+id/deleteAircraftButton"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_alignBaseline="@+id/addNewAircraftId"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/danger_red"
+            android:text="Delete"
+            android:textColor="@color/white"
+            android:enabled="false"/>
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/airfoilIndicatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ButtonView"
+        android:background="#444"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/airfoilPlacardTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Not for use as a primary instrument for flight"
+            android:textColor="@color/white"
+            android:background="#666"
+            android:padding="3dp"
+            android:layout_alignParentTop="true"
+            android:textSize="16sp"
+            android:textStyle="bold|italic" />
+
+        <Button
+            android:id="@+id/arrowIndicatorButton"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="@color/medium_gray"
+            android:textColor="@color/white"
+            android:text="Switch Indicator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/airfoilNegativeAngleImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/ic_yellow_arc"
+            android:rotation="-60"
+            />
+
+        <ImageView
+            android:id="@+id/airfoilLevelFlightImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/ic_green_arc"
+            />
+
+        <ImageView
+            android:id="@+id/airfoilWarningImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/ic_yellow_arc"
+            />
+
+        <ImageView
+            android:id="@+id/airfoilDangerImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/ic_red_arc" />
+
+        <ImageView
+            android:id="@+id/airfoilGlidePathImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_blue_arc" />
+
+        <ImageView
+            android:id="@+id/airfoilImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/ic_airfoil" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
+            android:text="Sensor Angle:" />
+
+        <TextView
+            android:id="@+id/airfoilSensorAngleTextView"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:textAlignment="textEnd"
+            android:text="0" />
+
+        <TextView
+            android:id="@+id/airfoilCalibratedAngleTextView"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="30dp"
+            android:text="0"
+            android:textAlignment="textEnd" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="30dp"
+            android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
+            android:text="Calibrated Angle:" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/arrowIndicatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ButtonView"
+        android:background="#444"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="-290dp"
+            android:layout_marginTop="-230dp"
+            android:layout_marginEnd="-266dp"
+            android:layout_marginBottom="-240dp"
+            android:src="@drawable/ic_indicatorvector">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/placardTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Not for use as a primary instrument for flight"
+            android:textColor="@color/white"
+            android:background="#666"
+            android:padding="3dp"
+            android:layout_alignParentTop="true"
+            android:textSize="16sp"
+            android:textStyle="bold|italic" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/arrowSensorAngleTextView"
+            android:layout_toStartOf="@id/arrowSensorAngleTextView"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="0dp"
+            android:text="Sensor Angle:" />
+
+        <TextView
+            android:id="@+id/arrowSensorAngleTextView"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@id/airfoilIndicatorButton"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="0"
+            android:textAlignment="textEnd" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/arrowSensorAngleTextView"
+            android:layout_toStartOf="@id/arrowSensorAngleTextView"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:text="Calibrated Angle:" />
+
+        <TextView
+            android:id="@+id/arrowCalibratedAngleTextView"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_alignBottom="@id/arrowSensorAngleTextView"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="textEnd"
+            android:text="0"/>
+
+        <Button
+            android:id="@+id/airfoilIndicatorButton"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="@color/medium_gray"
+            android:textColor="@color/white"
+            android:text="Switch Indicator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ButtonView"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@color/dark_gray">
+
+        <Button
+            android:id="@+id/sensorButton"
+            android:layout_width="110dp"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:backgroundTint="@color/light_blue"
+            android:text="Sensor"
+            android:textSize="12dp" />
+
+        <Button
+            android:id="@+id/aircraftButton"
+            android:layout_width="110dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/light_yellow"
+            android:text="Aircraft"
+            android:textSize="12dp" />
+
+        <Button
+            android:id="@+id/indicatorButton"
+            android:layout_width="110dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/medium_gray"
+            android:text="Indicator"
+            android:textSize="12dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/DisclaimerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/disclaimerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/white"
+            android:text="Disclaimer"
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:layout_alignParentTop="true"/>
+
+        <ScrollView
+            android:id="@+id/disclaimerScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/disclaimerAgreeButton"
+            android:layout_below="@+id/disclaimerTitle"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:scrollbars="vertical">
+
+            <TextView
+                android:id="@+id/disclaimerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:isScrollContainer="true"
+                android:text="By using this Angle of Attack Sensor (sensor) and/or Angle of Attack Indicator software (indicator), you agree with the following:\n\n
+- you understand and agree that, while the sensor and indicator can contribute to better situational awareness in the cockpit, they are NOT designed or certified to be used as/by a primary flight instrument\n\n
+- you understand and agree that the data produced by the sensor and/or the indicator will NOT be used as/by a primary flight instrument\n\n
+- you understand and agree that the pilot in command is SOLELY responsible for the safe outcome of every flight\n\n
+- the pilot in command accepts FULL responsibility for any accident, harm, death, and/or loss that occurs while using the sensor and/or indicator\n\n
+- the pilot in command has briefed all passengers and all passengers agree to the same\n\n
+- the pilot in command (and each passenger) agrees to NOT hold the designer and/or builder of the sensor and or indicator responsible for any accident, harm, death and/or loss that occurs while using the sensor and/or indicator, unless the designer and/or builder is the designated pilot in command during the flight\n\n"
+                android:textColor="@color/white"
+                android:textSize="14dp" />
+        </ScrollView>
+
+
+        <Button
+            android:id="@+id/disclaimerAgreeButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:backgroundTint="@color/danger_red"
+            android:text="Agree and Continue"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>
