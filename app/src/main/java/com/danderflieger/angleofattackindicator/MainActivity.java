@@ -477,6 +477,7 @@ public class MainActivity extends AppCompatActivity {
 
         ANGLE_SERVICE_UUID          = UUID.fromString(ANGLE_SERVICE_UUID_STRING);
         ANGLE_CHARACTERISTIC1_UUID  = UUID.fromString(ANGLE_CHARACTERISTIC1_UUID_STRING);
+        TURN_RATE_CHARACTERISTIC_UUID = UUID.fromString(TURN_RATE_CHARACTERISTIC_UUID_STRING);
         //MESSAGE_CHARACTERISTIC_UUID = UUID.fromString(MESSAGE_CHARACTERISTIC_UUID_STRING);
         DESCRIPTOR_UUID         = UUID.fromString(DESCRIPTOR_UUID_STRING);
         imageView = findViewById(R.id.indicator);
@@ -762,33 +763,38 @@ public class MainActivity extends AppCompatActivity {
         // Loops through available GATT Services.
         for (BluetoothGattService gattService : gattServices) {
 
-            final String uuid = gattService.getUuid().toString();
-            System.out.println("Service discovered: " + uuid);
-            MainActivity.this.runOnUiThread(new Runnable() {
-                public void run() {
-                    peripheralTextView.append("Service disovered: " + uuid + "\n");
-                }
-            });
+            if (gattService.getUuid().equals(ANGLE_SERVICE_UUID)) {
 
-            new ArrayList<HashMap<String, String>>();
-            List<BluetoothGattCharacteristic> gattCharacteristics =
-                    gattService.getCharacteristics();
-
-            // Loops through available Characteristics.
-            for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-
-                final String charUuid = gattCharacteristic.getUuid().toString();
-                //String charValue = new String(gattCharacteristic.getValue());
-                System.out.println("Characteristic discovered for service: " + charUuid);
+                final String uuid = gattService.getUuid().toString();
+                System.out.println("Service discovered: " + uuid);
                 MainActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
-                        peripheralTextView.append(
-                                "Characteristic discovered for service: " + charUuid
-                                        + "\n"
-                        );
+                        peripheralTextView.append("Service disovered: " + uuid + "\n");
                     }
                 });
 
+
+
+                new ArrayList<HashMap<String, String>>();
+                List<BluetoothGattCharacteristic> gattCharacteristics =
+                        gattService.getCharacteristics();
+
+                // Loops through available Characteristics.
+                for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+
+                    final String charUuid = gattCharacteristic.getUuid().toString();
+                    //String charValue = new String(gattCharacteristic.getValue());
+                    System.out.println("Characteristic discovered for service: " + charUuid);
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            peripheralTextView.append(
+                                    "Characteristic discovered for service: " + charUuid
+                                            + "\n"
+                            );
+                        }
+                    });
+
+                }
             }
         }
     }
@@ -829,22 +835,39 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
 
+            BluetoothGattService service = gatt.getService(ANGLE_SERVICE_UUID);
+            BluetoothGattCharacteristic turnRateCharacteristic = service.getCharacteristic(TURN_RATE_CHARACTERISTIC_UUID);
+            gatt.readCharacteristic(turnRateCharacteristic);
+
+
+
             if (characteristic.getUuid().equals(ANGLE_CHARACTERISTIC1_UUID)) { // && reading.split(",").length == 2) {
 
-                byte[] b = characteristic.getValue();
+                gatt.readCharacteristic(characteristic);
+
                 DecimalFormat df = new DecimalFormat("#.#");
-                float reading = ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                String strReading = df.format(reading);
-                float formattedReading = Float.parseFloat(strReading);
+
+                byte[] angleByteArray = characteristic.getValue();
+                float angleReading = ByteBuffer.wrap(angleByteArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                String strAngleReading = df.format(angleReading);
+                float formattedAngleReading = Float.parseFloat(strAngleReading);
                 levelCruiseAngleValue   = isNumeric(levelFlight.getText().toString()) ? Double.parseDouble(levelFlight.getText().toString()) : 0.0;
                 dangerAngleValue = Double.parseDouble(dangerAngle.getText().toString());
+
+                byte[] turnRateByteArray = turnRateCharacteristic.getValue();
+                float turnRateReading = turnRateByteArray != null ? ByteBuffer.wrap(turnRateByteArray).order(ByteOrder.LITTLE_ENDIAN).getFloat() : 0.0f;
+                String strTurnRateReading = df.format(turnRateReading);
+                float formattedTurnRateReading = Float.parseFloat(strTurnRateReading);
+
+                System.out.println(String.format ("formattedAngleReading: %s\tfomrattedTurnRateReading: %s", formattedAngleReading, formattedTurnRateReading));
+
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
 //                        currentAngle.setText(String.format("%.2f", reading));
-                        currentAngle.setText(strReading);
+                        currentAngle.setText(strAngleReading);
 
                         // these two floats determine how opaque the backgrounds
                         // are on the arrow-type indicator - lightOn is fully opaque,
@@ -856,10 +879,10 @@ public class MainActivity extends AppCompatActivity {
                         if (arrowIndicatorLayout.getVisibility() == View.VISIBLE) {
 
 //                            float calibratedReading = reading - (float)levelCruiseAngleValue;
-                            float calibratedReading = formattedReading - (float)levelCruiseAngleValue;
+                            float calibratedReading = formattedAngleReading - (float)levelCruiseAngleValue;
 
 //                            arrowSensorAngleTextView.setText(String.format("%.1f",reading));
-                            arrowSensorAngleTextView.setText(strReading);
+                            arrowSensorAngleTextView.setText(strAngleReading);
                             arrowCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
 
                             // Danger Angle
@@ -920,7 +943,7 @@ public class MainActivity extends AppCompatActivity {
                         if (airfoilIndicatorLayout.getVisibility() == View.VISIBLE) {
 
                             //float calibratedReading = reading - (float)levelCruiseAngleValue;
-                            float calibratedReading = formattedReading - (float)levelCruiseAngleValue;
+                            float calibratedReading = formattedAngleReading - (float)levelCruiseAngleValue;
 
                             if (calibratedReading < -60f) {
                                 calibratedReading = -60f;
@@ -930,7 +953,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                            airfoilSensorAngleTextView.setText(String.format("%.1f",reading));
+                            airfoilSensorAngleTextView.setText(String.format("%.1f",angleReading));
                             airfoilCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
 
                             setAirfoilArcsPositions();
@@ -1124,17 +1147,26 @@ public class MainActivity extends AppCompatActivity {
 
                     BluetoothGattService angleService = gatt.getService(ANGLE_SERVICE_UUID);
                     BluetoothGattCharacteristic angleCharacteristic = angleService.getCharacteristic(ANGLE_CHARACTERISTIC1_UUID);
+                    BluetoothGattCharacteristic turnRateCharacteristic = angleService.getCharacteristic(TURN_RATE_CHARACTERISTIC_UUID);
 
                     BluetoothGattDescriptor angleDescriptor = angleCharacteristic.getDescriptor(DESCRIPTOR_UUID);
+                    BluetoothGattDescriptor turnRateDescriptor = turnRateCharacteristic.getDescriptor(DESCRIPTOR_UUID);
                     angleDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    turnRateDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
 
                     gatt.writeDescriptor(angleDescriptor);
+                    gatt.writeDescriptor(turnRateDescriptor);
                     //gatt.writeDescriptor(messageDescriptor);
                     gatt.setCharacteristicNotification(angleCharacteristic, true);
+                    gatt.setCharacteristicNotification(turnRateCharacteristic, true);
                     //gatt.setCharacteristicNotification(messageCharacteristic, true);
 
                     gatt.writeCharacteristic(angleCharacteristic);
+                    gatt.writeCharacteristic(turnRateCharacteristic);
                     //gatt.writeCharacteristic(messageCharacteristic);
+
+                    gatt.readCharacteristic(angleCharacteristic);
+                    gatt.readCharacteristic(turnRateCharacteristic);
 
                 }
             });
