@@ -168,11 +168,13 @@ public class MainActivity extends AppCompatActivity {
 
     final String ANGLE_SERVICE_UUID_STRING          = "00000001-627e-47e5-a3fc-ddabd97aa966";
     final String ANGLE_CHARACTERISTIC1_UUID_STRING  = "00000002-627e-47e5-a3fc-ddabd97aa966";
+    final String TURN_RATE_CHARACTERISTIC_UUID_STRING = "00000003-627e-47e5-a3fc-ddabd97aa966";
     //final String MESSAGE_CHARACTERISTIC_UUID_STRING = "00000003-627e-47e5-a3fc-ddabd97aa966";
     final String DESCRIPTOR_UUID_STRING             = "00002902-0000-1000-8000-00805f9b34fb"; // This never changes!
 
     private UUID ANGLE_SERVICE_UUID;
     private UUID ANGLE_CHARACTERISTIC1_UUID;
+    private UUID TURN_RATE_CHARACTERISTIC_UUID;
     private UUID MESSAGE_CHARACTERISTIC_UUID;
     private UUID DESCRIPTOR_UUID;
 
