@@ -111,14 +111,17 @@ public class MainActivity extends AppCompatActivity {
     Button descentAngleUpdateButton;
     Button warningAngleUpdateButton;
     Button dangerAngleUpdateButton;
+    Button turnRateOffsetUpdateButton;
     Switch editAircraftSwitch;
     Spinner selectAircraftSpinner;
 
     EditText currentAngle;
+    EditText currentTurnRate;
     EditText levelFlight;
     EditText descentAngle;
     EditText warningAngle;
     EditText dangerAngle;
+    EditText turnRateOffset;
     EditText addNewAircraftId;
 
 
@@ -148,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
     TextView airfoilCalibratedAngleTextView;
     TextView airfoilSensorAngleTextView;
     TextView airfoilTurnRateTextView;
+    TextView airfoilCalibratedTurnRateTextView;
     int ANGLE_MULTIPLIER = 2;
     Button arrowIndicatorButton;
 
@@ -180,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
     private UUID DESCRIPTOR_UUID;
 
     private double levelCruiseAngleValue;
+    private double turnRateValue;
     private double glidePathAngleValue;
     private double warningAngleValue;
     private double dangerAngleValue;
@@ -336,15 +341,18 @@ public class MainActivity extends AppCompatActivity {
         descentAngleUpdateButton = findViewById(R.id.descentAngleUpdateButton);
         warningAngleUpdateButton = findViewById(R.id.warningAngleUpdateButton);
         dangerAngleUpdateButton = findViewById(R.id.dangerAngleUpdateButton);
+        turnRateOffsetUpdateButton = findViewById(R.id.turnRateOffsetUpdateButton);
 
         // Instantiate the other controls on the AircraftLayout section
         selectAircraftSpinner = findViewById(R.id.aircraftSpinner);
         editAircraftSwitch = findViewById(R.id.editAircraftSwitch);
         currentAngle = findViewById(R.id.currentAngle);
+        currentTurnRate = findViewById(R.id.currentTurnRate);
         levelFlight = findViewById(R.id.levelFlight);
         descentAngle = findViewById(R.id.descentAngle);
         warningAngle = findViewById(R.id.warningAngle);
         dangerAngle = findViewById(R.id.dangerAngle);
+        turnRateOffset = findViewById(R.id.turnRateOffset);
         addNewAircraftId = findViewById(R.id.addNewAircraftId);
         addNewAircraftButton = findViewById(R.id.addAircraftButton);
         deleteAircraftButton = findViewById(R.id.deleteAircraftButton);
@@ -361,10 +369,12 @@ public class MainActivity extends AppCompatActivity {
                     descentAngle.setEnabled(checked);
                     warningAngle.setEnabled(checked);
                     dangerAngle.setEnabled(checked);
+                    turnRateOffset.setEnabled(checked);
                     levelFlightUpdateButton.setEnabled(checked);
                     descentAngleUpdateButton.setEnabled(checked);
                     warningAngleUpdateButton.setEnabled(checked);
                     dangerAngleUpdateButton.setEnabled(checked);
+                    turnRateOffsetUpdateButton.setEnabled(checked);
                     deleteAircraftButton.setEnabled(checked);
 
                     // save values when deselecting the switch
@@ -389,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Please enter an Aircraft ID to add it.", Toast.LENGTH_LONG).show();
                     } else {
                         String newAircraftId = addNewAircraftId.getText().toString();
-                        aircraftModel = new AircraftModel(newAircraftId, 0, 0, 0, 0);
+                        aircraftModel = new AircraftModel(newAircraftId, 0, 0, 0, 0, 0);
 
                         SQLiteOpenHelper databaseHelper = new SQLiteOpenHelper(MainActivity.this);
                         if (!databaseHelper.doesAircraftExist(newAircraftId)) {
@@ -469,6 +479,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        turnRateOffsetUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double currentTurnRateReading = Double.parseDouble(currentTurnRate.getText().toString());
+                turnRateOffset.setText(String.valueOf(currentTurnRateReading));
+            }
+        });
+
 
 
 
@@ -511,15 +529,17 @@ public class MainActivity extends AppCompatActivity {
         VectorChildFinder airfoilVector = new VectorChildFinder(this, R.drawable.ic_airfoil, airfoilImageView);
         airfoilPath = airfoilVector.findPathByName("airfoil");
 
-        airfoilLevelFlightImageView     = findViewById(R.id.airfoilLevelFlightImageView);
-        airfoilWarningImageView         = findViewById(R.id.airfoilWarningImageView);
-        airfoilDangerImageView          = findViewById(R.id.airfoilDangerImageView);
-        airfoilGlidePathImageView       = findViewById(R.id.airfoilGlidePathImageView);
-        airfoilNegativeAngleImageView   = findViewById(R.id.airfoilNegativeAngleImageView);
-        airfoilCalibratedAngleTextView  = findViewById(R.id.airfoilCalibratedAngleTextView);
-        airfoilSensorAngleTextView      = findViewById(R.id.airfoilSensorAngleTextView);
-        airfoilTurnRateTextView         = findViewById(R.id.airfoilTurnRateTextView);
-        arrowIndicatorButton            = findViewById(R.id.arrowIndicatorButton);
+        airfoilLevelFlightImageView         = findViewById(R.id.airfoilLevelFlightImageView);
+        airfoilWarningImageView             = findViewById(R.id.airfoilWarningImageView);
+        airfoilDangerImageView              = findViewById(R.id.airfoilDangerImageView);
+        airfoilGlidePathImageView           = findViewById(R.id.airfoilGlidePathImageView);
+        airfoilNegativeAngleImageView       = findViewById(R.id.airfoilNegativeAngleImageView);
+        airfoilCalibratedAngleTextView      = findViewById(R.id.airfoilCalibratedAngleTextView);
+        airfoilSensorAngleTextView          = findViewById(R.id.airfoilSensorAngleTextView);
+        airfoilTurnRateTextView             = findViewById(R.id.airfoilSensorTurnRateTextView);
+        airfoilCalibratedTurnRateTextView   = findViewById(R.id.airfoilCalibratedTurnRateTextView);
+        arrowIndicatorButton                = findViewById(R.id.arrowIndicatorButton);
+
         arrowIndicatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -557,8 +577,9 @@ public class MainActivity extends AppCompatActivity {
             double descentAngleValue = Double.parseDouble(descentAngle.getText().toString());
             double warningAngleValue = Double.parseDouble(warningAngle.getText().toString());
             double dangerAngleValue = Double.parseDouble(dangerAngle.getText().toString());
+            double turnRate         = Double.parseDouble(turnRateOffset.getText().toString());
 
-            AircraftModel aircraftModel = new AircraftModel(aircraftIdValue, levelAngleValue, descentAngleValue, warningAngleValue, dangerAngleValue);
+            AircraftModel aircraftModel = new AircraftModel(aircraftIdValue, levelAngleValue, descentAngleValue, warningAngleValue, dangerAngleValue, turnRate);
 
             sqLiteOpenHelper.updateAirplane(aircraftModel);
         } else {
@@ -599,6 +620,8 @@ public class MainActivity extends AppCompatActivity {
         descentAngle.setText(String.valueOf(aircraftModel.getDescentAngle()));
         warningAngle.setText(String.valueOf(aircraftModel.getWarningAngle()));
         dangerAngle.setText(String.valueOf(aircraftModel.getDangerAngle()));
+        turnRateOffset.setText(String.valueOf(aircraftModel.getTurnRate()));
+
 
     }
 
@@ -860,6 +883,8 @@ public class MainActivity extends AppCompatActivity {
                 float turnRateReading = turnRateByteArray != null ? ByteBuffer.wrap(turnRateByteArray).order(ByteOrder.LITTLE_ENDIAN).getFloat() : 0.0f;
                 String strTurnRateReading = df.format(turnRateReading);
                 float formattedTurnRateReading = Float.parseFloat(strTurnRateReading);
+                turnRateValue = isNumeric(turnRateOffset.getText().toString()) ? Double.parseDouble(turnRateOffset.getText().toString()) : 0.0;
+
 
                 System.out.println(String.format ("formattedAngleReading: %s\tfomrattedTurnRateReading: %s", formattedAngleReading, formattedTurnRateReading));
 
@@ -870,6 +895,7 @@ public class MainActivity extends AppCompatActivity {
 
 //                        currentAngle.setText(String.format("%.2f", reading));
                         currentAngle.setText(strAngleReading);
+                        currentTurnRate.setText(strTurnRateReading);
 
                         // these two floats determine how opaque the backgrounds
                         // are on the arrow-type indicator - lightOn is fully opaque,
@@ -882,6 +908,7 @@ public class MainActivity extends AppCompatActivity {
 
 //                            float calibratedReading = reading - (float)levelCruiseAngleValue;
                             float calibratedReading = formattedAngleReading - (float)levelCruiseAngleValue;
+                            float calibratedTurnRate = formattedTurnRateReading - (float)turnRateValue;
 
 //                            arrowSensorAngleTextView.setText(String.format("%.1f",reading));
                             arrowSensorAngleTextView.setText(strAngleReading);
@@ -935,6 +962,8 @@ public class MainActivity extends AppCompatActivity {
                                 negativeAnglePath.setFillAlpha(lightOff);
                             }
 
+
+
                             imageView.invalidate();
 
                             controlAudibleWarning(calibratedReading);
@@ -946,6 +975,7 @@ public class MainActivity extends AppCompatActivity {
 
                             //float calibratedReading = reading - (float)levelCruiseAngleValue;
                             float calibratedReading = formattedAngleReading - (float)levelCruiseAngleValue;
+                            float calibratedTurnRateReading = formattedTurnRateReading - (float) turnRateValue;
 
                             if (calibratedReading < -60f) {
                                 calibratedReading = -60f;
@@ -958,6 +988,8 @@ public class MainActivity extends AppCompatActivity {
                             airfoilSensorAngleTextView.setText(String.format("%.1f",angleReading));
                             airfoilCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
                             airfoilTurnRateTextView.setText(String.format("%.1f", formattedTurnRateReading));
+                            airfoilCalibratedTurnRateTextView.setText(String.format("%.1f", calibratedTurnRateReading));
+
 
                             setAirfoilArcsPositions();
 

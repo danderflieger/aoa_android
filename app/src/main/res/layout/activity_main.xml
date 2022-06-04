@@ -7,6 +7,7 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
+    <!-- Sensor Tab  -->
     <RelativeLayout
         android:id="@+id/sensorLayout"
         android:layout_width="match_parent"
@@ -108,6 +109,7 @@
 
     </RelativeLayout>
 
+    <!-- Aircraft Tab -->
     <RelativeLayout
         android:id="@+id/aircraftLayout"
         android:layout_width="match_parent"
@@ -167,8 +169,30 @@
         <EditText
             android:id="@+id/currentAngle"
             android:layout_width="80dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_alignBaseline="@id/currentAngleCaption"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/levelFlightUpdateButton"
+            android:enabled="false"
+            android:inputType="numberDecimal|numberSigned"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/currentTurnRateCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/currentAngleCaption"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Current Yaw"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/currentTurnRate"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_alignBaseline="@id/currentTurnRateCaption"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/levelFlightUpdateButton"
             android:enabled="false"
@@ -181,9 +205,9 @@
             android:id="@+id/levelFlightCaption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/currentAngleCaption"
+            android:layout_below="@id/currentTurnRateCaption"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="25dp"
             android:text="Level Angle"
             android:textSize="16dp" />
 
@@ -212,6 +236,8 @@
             android:textSize="12dp"/>
 
 
+
+
         <!-- Descent Angle Controls -->
         <TextView
             android:id="@+id/descentAngleCaption"
@@ -219,14 +245,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/levelFlightUpdateButton"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:text="Descent Angle"
             android:textSize="16dp" />
 
         <EditText
             android:id="@+id/descentAngle"
             android:layout_width="80dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_alignTop="@id/descentAngleUpdateButton"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/descentAngleUpdateButton"
@@ -255,14 +281,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/descentAngleUpdateButton"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:text="Warning Angle"
             android:textSize="16dp" />
 
         <EditText
             android:id="@+id/warningAngle"
             android:layout_width="80dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_alignTop="@id/warningAngleUpdateButton"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/warningAngleUpdateButton"
@@ -291,14 +317,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/warningAngleUpdateButton"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:text="Danger Angle"
             android:textSize="16dp" />
 
         <EditText
             android:id="@+id/dangerAngle"
             android:layout_width="80dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_alignTop="@id/dangerAngleUpdateButton"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/dangerAngleUpdateButton"
@@ -317,6 +343,41 @@
             android:backgroundTint="@color/light_blue"
             android:enabled="false"
             android:text="Use Current"
+            android:textSize="12dp"/>
+
+        <!-- Turn Rate Offset Controls -->
+        <TextView
+            android:id="@+id/turnRateOffsetCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dangerAngleUpdateButton"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:text="Turn Rate Offset"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/turnRateOffset"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@+id/turnRateOffsetUpdateButton"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/turnRateOffsetUpdateButton"
+            android:enabled="false"
+            android:inputType="numberDecimal|numberSigned"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/turnRateOffsetUpdateButton"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_alignBaseline="@+id/turnRateOffsetCaption"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/light_blue"
+            android:enabled="false"
+            android:text="Set Current"
             android:textSize="12dp"/>
 
 
@@ -370,13 +431,19 @@
 
     </RelativeLayout>
 
+    <!-- Indicator Tab / Airfoil Indicator -->
     <RelativeLayout
+        android:orientation="vertical"
         android:id="@+id/airfoilIndicatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ButtonView"
         android:background="#444"
         android:visibility="visible">
+
+
+
+
 
         <TextView
             android:id="@+id/airfoilPlacardTextView"
@@ -406,113 +473,149 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/airfoilNegativeAngleImageView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            app:srcCompat="@drawable/ic_yellow_arc"
-            android:rotation="-60"
-            />
+            android:layout_height="wrap_content"
+            android:layout_above="@id/AirfoilTextOutput">
+            <ImageView
+                android:id="@+id/airfoilNegativeAngleImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/ic_yellow_arc"
+                android:rotation="-60"
+                />
 
-        <ImageView
-            android:id="@+id/airfoilLevelFlightImageView"
+            <ImageView
+                android:id="@+id/airfoilLevelFlightImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/ic_green_arc"
+                />
+
+            <ImageView
+                android:id="@+id/airfoilWarningImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/ic_yellow_arc"
+                />
+
+            <ImageView
+                android:id="@+id/airfoilDangerImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/ic_red_arc" />
+
+            <ImageView
+                android:id="@+id/airfoilGlidePathImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_blue_arc" />
+
+            <ImageView
+                android:id="@+id/airfoilImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/ic_airfoil" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/AirfoilTextOutput"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            app:srcCompat="@drawable/ic_green_arc"
-            />
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
+                android:text="Sensor Angle:" />
 
-        <ImageView
-            android:id="@+id/airfoilWarningImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            app:srcCompat="@drawable/ic_yellow_arc"
-            />
+            <TextView
+                android:id="@+id/airfoilSensorAngleTextView"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:textAlignment="textEnd"
+                android:text="0" />
 
-        <ImageView
-            android:id="@+id/airfoilDangerImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            app:srcCompat="@drawable/ic_red_arc" />
+            <TextView
+                android:id="@+id/airfoilCalibratedAngleTextView"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="25dp"
+                android:text="0"
+                android:textAlignment="textEnd" />
 
-        <ImageView
-            android:id="@+id/airfoilGlidePathImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_blue_arc" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="25dp"
+                android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
+                android:text="Calibrated Angle:" />
 
-        <ImageView
-            android:id="@+id/airfoilImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            app:srcCompat="@drawable/ic_airfoil" />
+            <TextView
+                android:id="@+id/airfoilSensorTurnRateTextView"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="50dp"
+                android:text="0"
+                android:textAlignment="textEnd" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
-            android:text="Sensor Angle:" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="50dp"
+                android:layout_toStartOf="@+id/airfoilSensorTurnRateTextView"
+                android:text="Sensor Turn Rate:" />
 
-        <TextView
-            android:id="@+id/airfoilSensorAngleTextView"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp"
-            android:textAlignment="textEnd"
-            android:text="0" />
+            <TextView
+                android:id="@+id/airfoilCalibratedTurnRateTextView"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="65dp"
+                android:text="0"
+                android:textAlignment="textEnd" />
 
-        <TextView
-            android:id="@+id/airfoilCalibratedAngleTextView"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="30dp"
-            android:text="0"
-            android:textAlignment="textEnd" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="65dp"
+                android:layout_toStartOf="@+id/airfoilCalibratedTurnRateTextView"
+                android:text="Calibrated Turn Rate:" />
+        </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="30dp"
-            android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
-            android:text="Calibrated Angle:" />
 
-        <TextView
-            android:id="@+id/airfoilTurnRateTextView"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="50dp"
-            android:text="0"
-            android:textAlignment="textEnd" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="50dp"
-            android:layout_toStartOf="@+id/airfoilTurnRateTextView"
-            android:text="Turn Rate:" />
+
 
     </RelativeLayout>
 
+    <!-- Indicator Tab / Arrow Indicator -->
     <RelativeLayout
         android:id="@+id/arrowIndicatorLayout"
         android:layout_width="match_parent"
@@ -604,6 +707,7 @@
 
     </RelativeLayout>
 
+    <!-- Button Panel (bottom of screen) -->
     <RelativeLayout
         android:id="@+id/ButtonView"
         android:layout_width="match_parent"
