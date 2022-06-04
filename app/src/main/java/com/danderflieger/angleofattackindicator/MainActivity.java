@@ -841,7 +841,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-            if (characteristic.getUuid().equals(ANGLE_CHARACTERISTIC1_UUID)) { // && reading.split(",").length == 2) {
+            if (characteristic.getUuid().equals(ANGLE_CHARACTERISTIC1_UUID)) {
 
                 gatt.readCharacteristic(characteristic);
 
@@ -980,7 +980,7 @@ public class MainActivity extends AppCompatActivity {
                             RotateAnimation rotateAirfoil = new RotateAnimation(
                                 -(calibratedReading * ANGLE_MULTIPLIER), -(calibratedReading * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                             );
-                            rotateAirfoil.setDuration(100);
+                            rotateAirfoil.setDuration(500);
                             rotateAirfoil.setRepeatCount(Animation.INFINITE);
                             airfoilImageView.startAnimation(rotateAirfoil);
 
@@ -1180,7 +1180,7 @@ public class MainActivity extends AppCompatActivity {
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
 
-            peripheralTextView.append(characteristic.getValue().toString());
+            //peripheralTextView.append(characteristic.getValue().toString());
 
         }
 
