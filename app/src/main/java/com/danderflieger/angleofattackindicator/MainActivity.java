@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView airfoilNegativeAngleImageView;
     TextView airfoilCalibratedAngleTextView;
     TextView airfoilSensorAngleTextView;
+    TextView airfoilTurnRateTextView;
     int ANGLE_MULTIPLIER = 2;
     Button arrowIndicatorButton;
 
@@ -517,6 +518,7 @@ public class MainActivity extends AppCompatActivity {
         airfoilNegativeAngleImageView   = findViewById(R.id.airfoilNegativeAngleImageView);
         airfoilCalibratedAngleTextView  = findViewById(R.id.airfoilCalibratedAngleTextView);
         airfoilSensorAngleTextView      = findViewById(R.id.airfoilSensorAngleTextView);
+        airfoilTurnRateTextView         = findViewById(R.id.airfoilTurnRateTextView);
         arrowIndicatorButton            = findViewById(R.id.arrowIndicatorButton);
         arrowIndicatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -955,6 +957,7 @@ public class MainActivity extends AppCompatActivity {
 
                             airfoilSensorAngleTextView.setText(String.format("%.1f",angleReading));
                             airfoilCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
+                            airfoilTurnRateTextView.setText(String.format("%.1f", formattedTurnRateReading));
 
                             setAirfoilArcsPositions();
 
