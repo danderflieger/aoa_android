@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
@@ -71,6 +73,8 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -188,6 +192,9 @@ public class MainActivity extends AppCompatActivity {
     private double glidePathAngleValue;
     private double warningAngleValue;
     private double dangerAngleValue;
+
+    long lastMillis = 0;
+    float lastAngle;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -854,8 +861,12 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
+
     // Device connect call back
     private final BluetoothGattCallback btleGattCallback = new BluetoothGattCallback() {
+
+
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
@@ -866,7 +877,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
             if (characteristic.getUuid().equals(ANGLE_CHARACTERISTIC1_UUID)) {
+
+                Calendar calendar = Calendar.getInstance();
+                long currentMillis = calendar.getTimeInMillis();
 
                 gatt.readCharacteristic(characteristic);
 
@@ -876,7 +891,7 @@ public class MainActivity extends AppCompatActivity {
                 float angleReading = ByteBuffer.wrap(angleByteArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
                 String strAngleReading = df.format(angleReading);
                 float formattedAngleReading = Float.parseFloat(strAngleReading);
-                levelCruiseAngleValue   = isNumeric(levelFlight.getText().toString()) ? Double.parseDouble(levelFlight.getText().toString()) : 0.0;
+                levelCruiseAngleValue = isNumeric(levelFlight.getText().toString()) ? Double.parseDouble(levelFlight.getText().toString()) : 0.0;
                 dangerAngleValue = Double.parseDouble(dangerAngle.getText().toString());
 
                 byte[] turnRateByteArray = turnRateCharacteristic.getValue();
@@ -886,12 +901,13 @@ public class MainActivity extends AppCompatActivity {
                 turnRateValue = isNumeric(turnRateOffset.getText().toString()) ? Double.parseDouble(turnRateOffset.getText().toString()) : 0.0;
 
 
-                System.out.println(String.format ("formattedAngleReading: %s\tfomrattedTurnRateReading: %s", formattedAngleReading, formattedTurnRateReading));
+                System.out.println(String.format("formattedAngleReading: %s\tlastAngle: %s\tfomrattedTurnRateReading: %s", formattedAngleReading, lastAngle, formattedTurnRateReading));
 
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
 
 //                        currentAngle.setText(String.format("%.2f", reading));
                         currentAngle.setText(strAngleReading);
@@ -907,8 +923,8 @@ public class MainActivity extends AppCompatActivity {
                         if (arrowIndicatorLayout.getVisibility() == View.VISIBLE) {
 
 //                            float calibratedReading = reading - (float)levelCruiseAngleValue;
-                            float calibratedReading = formattedAngleReading - (float)levelCruiseAngleValue;
-                            float calibratedTurnRate = formattedTurnRateReading - (float)turnRateValue;
+                            float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
+                            float calibratedTurnRate = formattedTurnRateReading - (float) turnRateValue;
 
 //                            arrowSensorAngleTextView.setText(String.format("%.1f",reading));
                             arrowSensorAngleTextView.setText(strAngleReading);
@@ -924,7 +940,7 @@ public class MainActivity extends AppCompatActivity {
 
                             // Warning Angle
 //                            if (reading2 <= warningAngleValue + 1 && reading2 >= dangerAngleValue ) { //warningAngle && reading2 >= dangerAngle) {
-                            if (calibratedReading <= warningAngleValue + 1 && calibratedReading >= dangerAngleValue ) { //warningAngle && reading2 >= dangerAngle) {
+                            if (calibratedReading <= warningAngleValue + 1 && calibratedReading >= dangerAngleValue) { //warningAngle && reading2 >= dangerAngle) {
                                 warningAnglePath.setFillAlpha(lightOn);
                             } else {
                                 warningAnglePath.setFillAlpha(lightOff);
@@ -932,7 +948,7 @@ public class MainActivity extends AppCompatActivity {
 
                             // Upper Glide Path Angle
 //                            if (reading2 <= glidePathAngleValue + 1  && reading2 >= warningAngleValue) {
-                            if (calibratedReading <= glidePathAngleValue + 1  && calibratedReading >= warningAngleValue) {
+                            if (calibratedReading <= glidePathAngleValue + 1 && calibratedReading >= warningAngleValue) {
                                 upperGlidePathAnglePath.setFillAlpha(lightOn);
                             } else {
                                 upperGlidePathAnglePath.setFillAlpha(lightOff);
@@ -963,7 +979,6 @@ public class MainActivity extends AppCompatActivity {
                             }
 
 
-
                             imageView.invalidate();
 
                             controlAudibleWarning(calibratedReading);
@@ -973,56 +988,64 @@ public class MainActivity extends AppCompatActivity {
                         // Airfoil Indicator Type
                         if (airfoilIndicatorLayout.getVisibility() == View.VISIBLE) {
 
-                            //float calibratedReading = reading - (float)levelCruiseAngleValue;
-                            float calibratedReading = formattedAngleReading - (float)levelCruiseAngleValue;
-                            float calibratedTurnRateReading = formattedTurnRateReading - (float) turnRateValue;
+//                            if (currentMillis - lastMillis > 500) {
 
-                            if (calibratedReading < -60f) {
-                                calibratedReading = -60f;
-                            } else if (calibratedReading > 60f) {
-                                calibratedReading = 60f;
-                            }
+                                //float calibratedReading = reading - (float)levelCruiseAngleValue;
+                                float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
+                                float calibratedTurnRateReading = formattedTurnRateReading - (float) turnRateValue;
 
-
-
-                            airfoilSensorAngleTextView.setText(String.format("%.1f",angleReading));
-                            airfoilCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
-                            airfoilTurnRateTextView.setText(String.format("%.1f", formattedTurnRateReading));
-                            airfoilCalibratedTurnRateTextView.setText(String.format("%.1f", calibratedTurnRateReading));
+                                if (calibratedReading < -60f) {
+                                    calibratedReading = -60f;
+                                } else if (calibratedReading > 60f) {
+                                    calibratedReading = 60f;
+                                }
 
 
-                            setAirfoilArcsPositions();
-
-                            // Change the color of the airfoil, depending on its current value
-                            if (calibratedReading - 1.0 <= dangerAngleValue) {
-                                // Turn it RED
-                                airfoilPath.setFillColor(0xFFFF5555);
-                                airfoilPath.setStrokeColor(0xFFCC2222);
-                            } else if (calibratedReading - 1.0 <= warningAngleValue) {
-                                // Turn it YELLOW
-                                airfoilPath.setFillColor(0xFFFFFF55);
-                                airfoilPath.setStrokeColor(0xFFCCAA33);
-                            } else {
-                                //Turn it BLUE
-                                airfoilPath.setFillColor(0xFF9BBAF8);
-                                airfoilPath.setStrokeColor(0xFF728FC8);
-                            }
-
-                            //airfoilImageView.invalidate();
+                                airfoilSensorAngleTextView.setText(String.format("%.1f", angleReading));
+                                airfoilCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
+                                airfoilTurnRateTextView.setText(String.format("%.1f", formattedTurnRateReading));
+                                airfoilCalibratedTurnRateTextView.setText(String.format("%.1f", calibratedTurnRateReading));
 
 
+                                setAirfoilArcsPositions();
 
-                            RotateAnimation rotateAirfoil = new RotateAnimation(
-                                -(calibratedReading * ANGLE_MULTIPLIER), -(calibratedReading * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
-                            );
-                            rotateAirfoil.setDuration(500);
-                            rotateAirfoil.setRepeatCount(Animation.INFINITE);
-                            airfoilImageView.startAnimation(rotateAirfoil);
+                                // Change the color of the airfoil, depending on its current value
+                                    if (calibratedReading - 1.0 <= dangerAngleValue) {
+                                        // Turn it RED
+                                        airfoilPath.setFillColor(0xFFFF5555);
+                                        airfoilPath.setStrokeColor(0xFFCC2222);
+//                                    } else if (calibratedReading - 1.0 <= warningAngleValue) {
+//                                        // Turn it YELLOW
+//                                        airfoilPath.setFillColor(0xFFFFFF55);
+//                                        airfoilPath.setStrokeColor(0xFFCCAA33);
+                                    } else {
+                                        //Turn it BLUE
+                                        airfoilPath.setFillColor(0xFF9BBAF8);
+                                        airfoilPath.setStrokeColor(0xFF728FC8);
+                                    }
 
-                            //System.out.println(String.format("reading: %s | levelCruiseAngleValue: %s | warningAngleValue: %s | dangerAngleValue: %s | calibratedReading: %s", reading, levelCruiseAngleValue, warningAngleValue, dangerAngleValue, calibratedReading));
+                                //airfoilImageView.invalidate();
 
-                            controlAudibleWarning(calibratedReading);
+                                if (Float.isNaN(lastAngle)) {
+                                    lastAngle = 0.0f;
+                                }
 
+                                RotateAnimation rotateAirfoil = new RotateAnimation(
+//                                        -(calibratedReading * ANGLE_MULTIPLIER), -(calibratedReading * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                                        -(lastAngle * ANGLE_MULTIPLIER), -(calibratedReading * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                                );
+                                rotateAirfoil.setDuration(160);
+                                //rotateAirfoil.setRepeatCount(Animation.INFINITE);
+                                rotateAirfoil.setInterpolator(new FastOutSlowInInterpolator());// AccelerateDecelerateInterpolator()); // LinearInterpolator()); // new AccelerateDecelerateInterpolator()); // LinearInterpolator());
+                                airfoilImageView.startAnimation(rotateAirfoil);
+
+                                //System.out.println(String.format("reading: %s | levelCruiseAngleValue: %s | warningAngleValue: %s | dangerAngleValue: %s | calibratedReading: %s", reading, levelCruiseAngleValue, warningAngleValue, dangerAngleValue, calibratedReading));
+
+                                controlAudibleWarning(calibratedReading);
+
+                                lastAngle = (calibratedReading);
+                                //lastMillis = currentMillis;
+//                            }
                         }
                     }
                 });
