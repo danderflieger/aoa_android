@@ -87,6 +87,8 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final static int RECEIVE_INTERVAL = 150;
+
     RelativeLayout disclaimerLayout;
     ScrollView disclaimerScrollView;
     TextView disclaimerTextView;
@@ -147,11 +149,14 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout airfoilIndicatorLayout;
     ImageView airfoilImageView;
     VectorDrawableCompat.VFullPath airfoilPath;
+
     ImageView airfoilLevelFlightImageView;
     ImageView airfoilGlidePathImageView;
     ImageView airfoilWarningImageView;
     ImageView airfoilDangerImageView;
     ImageView airfoilNegativeAngleImageView;
+    ImageView airfoilTSNeedle;
+
     TextView airfoilCalibratedAngleTextView;
     TextView airfoilSensorAngleTextView;
     TextView airfoilTurnRateTextView;
@@ -541,6 +546,8 @@ public class MainActivity extends AppCompatActivity {
         airfoilDangerImageView              = findViewById(R.id.airfoilDangerImageView);
         airfoilGlidePathImageView           = findViewById(R.id.airfoilGlidePathImageView);
         airfoilNegativeAngleImageView       = findViewById(R.id.airfoilNegativeAngleImageView);
+        airfoilTSNeedle                     = findViewById(R.id.TS_Needle);
+
         airfoilCalibratedAngleTextView      = findViewById(R.id.airfoilCalibratedAngleTextView);
         airfoilSensorAngleTextView          = findViewById(R.id.airfoilSensorAngleTextView);
         airfoilTurnRateTextView             = findViewById(R.id.airfoilSensorTurnRateTextView);
@@ -1034,7 +1041,7 @@ public class MainActivity extends AppCompatActivity {
 //                                        -(calibratedReading * ANGLE_MULTIPLIER), -(calibratedReading * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                                         -(lastAngle * ANGLE_MULTIPLIER), -(calibratedReading * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                                 );
-                                rotateAirfoil.setDuration(160);
+                                rotateAirfoil.setDuration(RECEIVE_INTERVAL);
                                 //rotateAirfoil.setRepeatCount(Animation.INFINITE);
                                 rotateAirfoil.setInterpolator(new FastOutSlowInInterpolator());// AccelerateDecelerateInterpolator()); // LinearInterpolator()); // new AccelerateDecelerateInterpolator()); // LinearInterpolator());
                                 airfoilImageView.startAnimation(rotateAirfoil);
@@ -1045,6 +1052,28 @@ public class MainActivity extends AppCompatActivity {
 
                                 lastAngle = (calibratedReading);
                                 //lastMillis = currentMillis;
+
+                                float turnRateNeedleDegrees;
+                                if (calibratedTurnRateReading * 10 > 60) {
+                                    turnRateNeedleDegrees = 60;
+                                } else if (calibratedTurnRateReading * 10 < -60) {
+                                    turnRateNeedleDegrees = -60;
+                                } else {
+                                    turnRateNeedleDegrees = calibratedTurnRateReading * 10;
+                                }
+
+                                RotateAnimation rotateTurnAndSlipNeedle = new RotateAnimation(
+                                    turnRateNeedleDegrees,
+                                    turnRateNeedleDegrees,
+                                    Animation.RELATIVE_TO_SELF,
+                            0.5f,
+                                    Animation.RELATIVE_TO_SELF,
+                            0.5f
+                                );
+                                rotateTurnAndSlipNeedle.setDuration(RECEIVE_INTERVAL);
+                                rotateTurnAndSlipNeedle.setInterpolator(new FastOutSlowInInterpolator());
+                                airfoilTSNeedle.startAnimation(rotateTurnAndSlipNeedle);
+
 //                            }
                         }
                     }
