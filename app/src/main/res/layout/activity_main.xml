@@ -139,7 +139,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:backgroundTint="@color/dark_blue"
             android:minHeight="48dp"
             android:spinnerMode="dropdown"
@@ -172,7 +172,7 @@
             android:layout_height="40dp"
             android:layout_alignBaseline="@id/currentAngleCaption"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/levelFlightUpdateButton"
+            android:layout_alignParentEnd="true"
             android:enabled="false"
             android:inputType="numberDecimal|numberSigned"
             android:text="0"
@@ -194,7 +194,7 @@
             android:layout_height="40dp"
             android:layout_alignBaseline="@id/currentTurnRateCaption"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/levelFlightUpdateButton"
+            android:layout_alignParentEnd="true"
             android:enabled="false"
             android:inputType="numberDecimal|numberSigned"
             android:text="0"
@@ -207,6 +207,7 @@
             android:layout_below="@id/currentTurnRate"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
             android:text="Current Slip/Skid"
             android:textSize="16dp" />
 
@@ -216,199 +217,264 @@
             android:layout_height="40dp"
             android:layout_alignBaseline="@id/currentSlipSkidCaption"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/levelFlightUpdateButton"
-            android:enabled="false"
-            android:inputType="numberDecimal|numberSigned"
-            android:text="0"
-            android:textAlignment="center" />
 
-        <!-- Level Flight Controls -->
-        <TextView
-            android:id="@+id/levelFlightCaption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/currentSlipSkidCaption"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="25dp"
-            android:text="Level Angle"
-            android:textSize="16dp" />
-
-        <EditText
-            android:id="@+id/levelFlight"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
-            android:layout_alignTop="@id/levelFlightUpdateButton"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/levelFlightUpdateButton"
-            android:enabled="false"
-            android:inputType="numberDecimal|numberSigned"
-            android:text="0"
-            android:textAlignment="center" />
-
-        <Button
-            android:id="@+id/levelFlightUpdateButton"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_alignBaseline="@+id/levelFlightCaption"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/light_blue"
-            android:enabled="false"
-            android:text="Set Current"
-            android:textSize="12dp"/>
-
-
-
-
-        <!-- Descent Angle Controls -->
-        <TextView
-            android:id="@+id/descentAngleCaption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/levelFlightUpdateButton"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Descent Angle"
-            android:textSize="16dp" />
-
-        <EditText
-            android:id="@+id/descentAngle"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_alignTop="@id/descentAngleUpdateButton"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/descentAngleUpdateButton"
             android:enabled="false"
             android:inputType="numberDecimal|numberSigned"
             android:text="0"
             android:textAlignment="center" />
 
-        <Button
-            android:id="@+id/descentAngleUpdateButton"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_alignBaseline="@+id/descentAngleCaption"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/light_blue"
-            android:enabled="false"
-            android:text="Use Current"
-            android:textSize="12dp"/>
+        <View
+            android:id="@+id/horizontalDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/medium_gray"
+            android:layout_below="@id/currentSlipSkidCaption" />
 
 
-        <!-- Warning Angle Controls -->
-        <TextView
-            android:id="@+id/warningAngleCaption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/descentAngleUpdateButton"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Warning Angle"
-            android:textSize="16dp" />
 
-        <EditText
-            android:id="@+id/warningAngle"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_alignTop="@id/warningAngleUpdateButton"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/warningAngleUpdateButton"
-            android:enabled="false"
-            android:inputType="numberDecimal|numberSigned"
-            android:text="0"
-            android:textAlignment="center" />
+        <ScrollView
+            android:id="@+id/AircraftScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/horizontalDivider"
+            android:layout_above="@id/aircraftIdCaption"
+            android:background="#909040">
+            <!-- Level Flight Controls -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:id="@+id/levelFlightCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-        <Button
-            android:id="@+id/warningAngleUpdateButton"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_alignBaseline="@+id/warningAngleCaption"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/light_blue"
-            android:enabled="false"
-            android:text="Use Current"
-            android:textSize="12dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Level Angle"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/levelFlight"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_alignTop="@id/levelFlightUpdateButton"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/levelFlightUpdateButton"
+                    android:enabled="false"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:text="0"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/levelFlightUpdateButton"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_alignBaseline="@+id/levelFlightCaption"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/light_blue"
+                    android:enabled="false"
+                    android:text="Set Current"
+                    android:textSize="12dp" />
 
 
-        <!-- Danger Angle Controls -->
-        <TextView
-            android:id="@+id/dangerAngleCaption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/warningAngleUpdateButton"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Danger Angle"
-            android:textSize="16dp" />
+                <!-- Descent Angle Controls -->
+                <TextView
+                    android:id="@+id/descentAngleCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/levelFlightUpdateButton"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Descent Angle"
+                    android:textSize="16dp" />
 
-        <EditText
-            android:id="@+id/dangerAngle"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_alignTop="@id/dangerAngleUpdateButton"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/dangerAngleUpdateButton"
-            android:enabled="false"
-            android:inputType="numberDecimal|numberSigned"
-            android:text="0"
-            android:textAlignment="center" />
+                <EditText
+                    android:id="@+id/descentAngle"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_alignTop="@id/descentAngleUpdateButton"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/descentAngleUpdateButton"
+                    android:enabled="false"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:text="0"
+                    android:textAlignment="center" />
 
-        <Button
-            android:id="@+id/dangerAngleUpdateButton"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_alignBaseline="@+id/dangerAngleCaption"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/light_blue"
-            android:enabled="false"
-            android:text="Use Current"
-            android:textSize="12dp"/>
+                <Button
+                    android:id="@+id/descentAngleUpdateButton"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_alignBaseline="@+id/descentAngleCaption"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/light_blue"
+                    android:enabled="false"
+                    android:text="Use Current"
+                    android:textSize="12dp" />
 
-        <!-- Turn Rate Offset Controls -->
-        <TextView
-            android:id="@+id/turnRateOffsetCaption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/dangerAngleUpdateButton"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Turn Rate Offset"
-            android:textSize="16dp" />
 
-        <EditText
-            android:id="@+id/turnRateOffset"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_alignBottom="@+id/turnRateOffsetUpdateButton"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/turnRateOffsetUpdateButton"
-            android:enabled="false"
-            android:inputType="numberDecimal|numberSigned"
-            android:text="0"
-            android:textAlignment="center" />
+                <!-- Warning Angle Controls -->
+                <TextView
+                    android:id="@+id/warningAngleCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/descentAngleUpdateButton"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Warning Angle"
+                    android:textSize="16dp" />
 
-        <Button
-            android:id="@+id/turnRateOffsetUpdateButton"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_alignBaseline="@+id/turnRateOffsetCaption"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/light_blue"
-            android:enabled="false"
-            android:text="Set Current"
-            android:textSize="12dp"/>
+                <EditText
+                    android:id="@+id/warningAngle"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_alignTop="@id/warningAngleUpdateButton"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/warningAngleUpdateButton"
+                    android:enabled="false"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:text="0"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/warningAngleUpdateButton"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_alignBaseline="@+id/warningAngleCaption"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/light_blue"
+                    android:enabled="false"
+                    android:text="Use Current"
+                    android:textSize="12dp" />
+
+
+                <!-- Danger Angle Controls -->
+                <TextView
+                    android:id="@+id/dangerAngleCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/warningAngleUpdateButton"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Danger Angle"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/dangerAngle"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_alignTop="@id/dangerAngleUpdateButton"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/dangerAngleUpdateButton"
+                    android:enabled="false"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:text="0"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/dangerAngleUpdateButton"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_alignBaseline="@+id/dangerAngleCaption"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/light_blue"
+                    android:enabled="false"
+                    android:text="Use Current"
+                    android:textSize="12dp" />
+
+                <!-- Turn Rate Offset Controls -->
+                <TextView
+                    android:id="@+id/turnRateOffsetCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dangerAngleUpdateButton"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Turn Rate Offset"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/turnRateOffset"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_alignTop="@+id/turnRateOffsetUpdateButton"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/turnRateOffsetUpdateButton"
+                    android:enabled="false"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:text="0"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/turnRateOffsetUpdateButton"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_alignBaseline="@+id/turnRateOffsetCaption"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/light_blue"
+                    android:enabled="false"
+                    android:text="Set Current"
+                    android:textSize="12dp" />
+
+                <!-- Slip/Skid Offset Controls -->
+                <TextView
+                    android:id="@+id/ballReadingMultiplierCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/turnRateOffsetUpdateButton"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="30dp"
+                    android:text="Ball Reading Multiplier"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/ballReadingMultiplier"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_alignTop="@+id/ballReadingMultiplierCaption"
+                    android:layout_alignStart="@id/turnRateOffset"
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@+id/ballReadingMultiplierCaption"
+                    android:enabled="false"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:text="0"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+        </ScrollView>
+
+
+<!--        <Button-->
+<!--            android:id="@+id/slipSkidOffsetUpdateButton"-->
+<!--            android:layout_width="120dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_alignBaseline="@+id/slipSkidOffsetCaption"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:backgroundTint="@color/light_blue"-->
+<!--            android:enabled="false"-->
+<!--            android:text="Set Current"-->
+<!--            android:textSize="12dp" />-->
 
 
         <!-- Add Aircraft-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/medium_gray"
+            android:layout_below="@id/AircraftScrollView" />
         <TextView
             android:id="@+id/aircraftIdCaption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@id/addNewAircraftId"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="-5dp"
             android:text="Aircraft ID"
@@ -432,8 +498,8 @@
             android:layout_height="48dp"
             android:layout_alignBaseline="@+id/addNewAircraftId"
             android:layout_alignParentEnd="false"
-            android:layout_toRightOf="@+id/addNewAircraftId"
             android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/addNewAircraftId"
             android:backgroundTint="@color/dark_blue"
             android:text="Add" />
 
@@ -445,10 +511,9 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/danger_red"
+            android:enabled="false"
             android:text="Delete"
-            android:textColor="@color/white"
-            android:enabled="false"/>
-
+            android:textColor="@color/white" />
 
 
     </RelativeLayout>
@@ -506,13 +571,13 @@
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_ts_gaugeface" />
 
-            <ImageView
-                android:id="@+id/TS_Needle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:rotation="-0"
-                android:src="@drawable/ic_ts_needle" />
+<!--            <ImageView-->
+<!--                android:id="@+id/TS_Needle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:rotation="-0"-->
+<!--                android:src="@drawable/ic_ts_needle" />-->
 
             <ImageView
                 android:id="@+id/TS_Ball"
@@ -669,7 +734,7 @@
                 android:layout_marginBottom="125dp"
                 android:text="0"
                 android:textAlignment="center"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/airfoilCalibratedSlipSkidTextView"
@@ -836,6 +901,7 @@
 
     </RelativeLayout>
 
+    <!-- Disclaimer -->
     <RelativeLayout
         android:id="@+id/DisclaimerView"
         android:layout_width="match_parent"

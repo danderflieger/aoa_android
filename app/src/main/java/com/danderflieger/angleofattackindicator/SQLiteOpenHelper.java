@@ -27,7 +27,8 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
                 " descentAngle REAL, " +
                 " warningAngle REAL," +
                 " dangerAngle REAL, " +
-                " turnRate REAL " +
+                " turnRate REAL, " +
+                "ballReadingMultiplier REAL " +
             ") ";
 
         db.execSQL(createTableStatement);
@@ -49,6 +50,7 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
         cv.put("warningAngle", aircraft.getWarningAngle());
         cv.put("dangerAngle", aircraft.getDangerAngle());
         cv.put("turnRate", aircraft.getTurnRate());
+        cv.put("ballReadingMultiplier", aircraft.getBallReadingMultiplier());
 
         long insert = db.insert(tblAircraft, null, cv);
         if (insert == -1) {
@@ -76,6 +78,7 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
         cv.put("warningAngle", aircraft.getWarningAngle());
         cv.put("dangerAngle", aircraft.getDangerAngle());
         cv.put("turnRate", aircraft.getTurnRate());
+        cv.put("ballReadingMultiplier", aircraft.getBallReadingMultiplier());
 
         long response = db.update(tblAircraft, cv, "aircraftID=?", new String[]{aircraft.getAircraftId()});
 
@@ -120,7 +123,8 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
                 cursor.getDouble(2), // glidePathAngle
                 cursor.getDouble(3), // warningAngle
                 cursor.getDouble(4), // dangerAngle
-                cursor.getDouble(5)  // turnRate
+                cursor.getDouble(5), // turnRate
+                cursor.getDouble(6)  // ballReadingMultiplier
         );
 
         return aircraftModel;
