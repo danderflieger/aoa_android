@@ -117,7 +117,7 @@
         android:layout_above="@+id/ButtonView"
         android:layout_marginBottom="0dp"
         android:background="@color/dark_yellow"
-        android:visibility="visible">
+        android:visibility="gone">
 
 
         <TextView
@@ -526,7 +526,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/ButtonView"
         android:background="#444"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/airfoilPlacardTextView"
@@ -569,7 +569,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_ts_gaugeface" />
+                android:src="@drawable/ic_ts_gaugeface"
+                android:visibility="visible"/>
 
 <!--            <ImageView-->
 <!--                android:id="@+id/TS_Needle"-->
@@ -647,6 +648,50 @@
                 android:layout_centerHorizontal="true"
                 app:srcCompat="@drawable/ic_airfoil" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
+                android:text="Sensor Angle:"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/airfoilSensorAngleTextView"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="0dp"
+                android:text="0"
+                android:textAlignment="textEnd"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/airfoilCalibratedAngleTextView"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/airfoilSensorAngleTextView"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="0dp"
+                android:text="0"
+                android:textAlignment="textEnd"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/airfoilSensorAngleTextView"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
+                android:text="Calibrated Angle:"
+                android:visibility="visible" />
+
 
 
         </RelativeLayout>
@@ -658,49 +703,7 @@
             android:layout_alignParentBottom="true">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
-                android:text="Sensor Angle:"
-                android:visibility="invisible" />
 
-            <TextView
-                android:id="@+id/airfoilSensorAngleTextView"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="0"
-                android:textAlignment="textEnd"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/airfoilCalibratedAngleTextView"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="25dp"
-                android:text="0"
-                android:textAlignment="textEnd"
-                android:visibility="invisible" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="25dp"
-                android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
-                android:text="Calibrated Angle:"
-                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/airfoilSensorTurnRateTextView"

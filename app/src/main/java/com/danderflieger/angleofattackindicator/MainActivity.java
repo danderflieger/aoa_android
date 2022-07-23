@@ -21,6 +21,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
@@ -764,16 +765,36 @@ public class MainActivity extends AppCompatActivity {
 
     public void connectToDeviceSelected() {
 
-        int deviceSelected = deviceSpinner.getSelectedItemPosition();
-        bluetoothGatt = devicesDiscovered.get(deviceSelected).connectGatt(this, false, btleGattCallback );
+        if (deviceSpinner.getChildCount() > 0) {
+            int deviceSelected = deviceSpinner.getSelectedItemPosition();
+            bluetoothGatt = devicesDiscovered.get(deviceSelected).connectGatt(this, false, btleGattCallback);
+        } else {
+            Toast.makeText(getApplicationContext(), "No sensors found.", Toast.LENGTH_LONG).show();
+            connectToDevice.setVisibility(View.INVISIBLE);
+        }
 
     }
 
     public void disconnectDeviceSelected() {
         peripheralTextView.append("Disconnecting from device\n");
-        bluetoothGatt.disconnect();
+
+        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
+
+        while (bluetoothManager.getConnectionState(bluetoothGatt.getDevice(), BluetoothProfile.GATT) != BluetoothGatt.STATE_DISCONNECTED) {
+            bluetoothGatt.close();
+            bluetoothGatt.disconnect();
+        }
+        btConnected = false;
+
+        Toast.makeText(getApplicationContext(), "Sensor disconnected.", Toast.LENGTH_LONG).show();
+
+        deviceSpinner.setAdapter(null);
+        peripheralTextView.append("device disconnected\n");
+
         disconnectDevice.setVisibility(View.INVISIBLE);
-        connectToDevice.setVisibility(View.VISIBLE);
+//        connectToDevice.setVisibility(View.VISIBLE);
+        connectToDevice.setVisibility(deviceSpinner.getChildCount() > 0 ? View.VISIBLE : View.INVISIBLE);
+
     }
 
     public void startScanning() {
