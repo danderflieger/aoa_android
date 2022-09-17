@@ -572,13 +572,13 @@
                 android:src="@drawable/ic_ts_gaugeface"
                 android:visibility="visible"/>
 
-<!--            <ImageView-->
-<!--                android:id="@+id/TS_Needle"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:rotation="-0"-->
-<!--                android:src="@drawable/ic_ts_needle" />-->
+            <ImageView
+                android:id="@+id/TS_Needle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:rotation="-0"
+                android:src="@drawable/ic_ts_needle" />
 
             <ImageView
                 android:id="@+id/TS_Ball"
@@ -701,8 +701,6 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_alignParentBottom="true">
-
-
 
 
             <TextView
