@@ -12,6 +12,19 @@
         <entry key="..\:/AndroidStudioProjects/AngleofAttackIndicator/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.3463541666666667" />
         <entry key="..\:/AndroidStudioProjects/AngleofAttackIndicator/app/src/main/res/drawable/ic_red_arc.xml" value="0.4515625" />
         <entry key="..\:/AndroidStudioProjects/AngleofAttackIndicator/app/src/main/res/layout/activity_main.xml" value="0.16" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_airfoil.xml" value="0.346875" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_blue_arc.xml" value="0.346875" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_green_arc.xml" value="0.346875" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_indicatorvector.xml" value="0.346875" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_launcher_background.xml" value="0.346875" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.346875" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_red_arc.xml" value="0.346875" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_ts_ball.xml" value="0.3415384615384615" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_ts_bars.xml" value="0.3415384615384615" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_ts_gaugeface.xml" value="0.346875" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_ts_needle.xml" value="0.3415384615384615" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/drawable/ic_yellow_arc.xml" value="0.346875" />
+        <entry key="..\:/Dan/AoA/aoa_android/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/drawable-v24/ic_aoa_indicators.xml" value="0.5" />
         <entry key="app/src/main/res/drawable/ic_aoa_indicators.xml" value="0.27037037037037037" />
         <entry key="app/src/main/res/drawable/ic_aoa_logo.xml" value="0.5241025641025641" />
@@ -20,7 +33,13 @@
         <entry key="app/src/main/res/drawable/ic_indicatorvector_icon.xml" value="0.5" />
         <entry key="app/src/main/res/drawable/ic_indicatorvector_logo.xml" value="0.5241025641025641" />
         <entry key="app/src/main/res/drawable/ic_indicatorvector_plain.xml" value="0.5322916666666667" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.17777777777777778" />
+        <entry key="app/src/main/res/drawable/ic_red_arc.xml" value="0.347" />
+        <entry key="app/src/main/res/drawable/ic_ts_ball.xml" value="0.347" />
+        <entry key="app/src/main/res/drawable/ic_ts_bars.xml" value="0.347" />
+        <entry key="app/src/main/res/drawable/ic_ts_gaugeface.xml" value="0.347" />
+        <entry key="app/src/main/res/drawable/ic_ts_needle.xml" value="0.347" />
+        <entry key="app/src/main/res/drawable/ic_yellow_arc.xml" value="0.347" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.41273584905660377" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.25104166666666666" />
       </map>

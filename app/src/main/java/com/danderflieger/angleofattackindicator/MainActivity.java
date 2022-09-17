@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
@@ -19,6 +21,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
@@ -71,6 +74,8 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,6 +87,8 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private final static int RECEIVE_INTERVAL = 180;
 
     RelativeLayout disclaimerLayout;
     ScrollView disclaimerScrollView;
@@ -111,14 +118,20 @@ public class MainActivity extends AppCompatActivity {
     Button descentAngleUpdateButton;
     Button warningAngleUpdateButton;
     Button dangerAngleUpdateButton;
+    Button turnRateOffsetUpdateButton;
+//    Button slipSkidOffsetUpdateButton;
     Switch editAircraftSwitch;
     Spinner selectAircraftSpinner;
 
     EditText currentAngle;
+    EditText currentTurnRate;
+    EditText currentSlipSkid;
     EditText levelFlight;
     EditText descentAngle;
     EditText warningAngle;
     EditText dangerAngle;
+    EditText turnRateOffset;
+    EditText ballReadingMultiplier;
     EditText addNewAircraftId;
 
 
@@ -140,13 +153,20 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout airfoilIndicatorLayout;
     ImageView airfoilImageView;
     VectorDrawableCompat.VFullPath airfoilPath;
+
     ImageView airfoilLevelFlightImageView;
     ImageView airfoilGlidePathImageView;
     ImageView airfoilWarningImageView;
     ImageView airfoilDangerImageView;
     ImageView airfoilNegativeAngleImageView;
+    ImageView airfoilTSNeedle;
+    ImageView airfoilTSBall;
+
     TextView airfoilCalibratedAngleTextView;
     TextView airfoilSensorAngleTextView;
+    TextView airfoilTurnRateTextView;
+    TextView airfoilCalibratedTurnRateTextView;
+    TextView airfoilCalibratedSlipSkidTextView;
     int ANGLE_MULTIPLIER = 2;
     Button arrowIndicatorButton;
 
@@ -166,20 +186,29 @@ public class MainActivity extends AppCompatActivity {
 
     private GoogleApiClient client;
 
-    final String ANGLE_SERVICE_UUID_STRING          = "00000001-627e-47e5-a3fc-ddabd97aa966";
-    final String ANGLE_CHARACTERISTIC1_UUID_STRING  = "00000002-627e-47e5-a3fc-ddabd97aa966";
-    //final String MESSAGE_CHARACTERISTIC_UUID_STRING = "00000003-627e-47e5-a3fc-ddabd97aa966";
-    final String DESCRIPTOR_UUID_STRING             = "00002902-0000-1000-8000-00805f9b34fb"; // This never changes!
+    final String ANGLE_SERVICE_UUID_STRING              = "00000001-627e-47e5-a3fc-ddabd97aa966";
+    final String READING_CHARACTERISTIC_UUID_STRING     = "00000002-627E-47E5-A3FC-DDABD97AA966";
+//    final String ANGLE_CHARACTERISTIC1_UUID_STRING      = "00000002-627e-47e5-a3fc-ddabd97aa966";
+//    final String TURN_RATE_CHARACTERISTIC_UUID_STRING   = "00000003-627e-47e5-a3fc-ddabd97aa966";
+//    final String SLIP_SKID_CHARACTERISTIC_UUID_STRING   = "00000004-627e-47e5-a3fc-ddabd97aa966";
+    final String DESCRIPTOR_UUID_STRING                 = "00002902-0000-1000-8000-00805f9b34fb"; // This never changes!
 
     private UUID ANGLE_SERVICE_UUID;
-    private UUID ANGLE_CHARACTERISTIC1_UUID;
-    private UUID MESSAGE_CHARACTERISTIC_UUID;
+    private UUID READING_CHARACTERISTIC_UUID;
+//    private UUID ANGLE_CHARACTERISTIC1_UUID;
+//    private UUID TURN_RATE_CHARACTERISTIC_UUID;
+//    private UUID SLIP_SKID_CHARACTERISTIC_UUID;
     private UUID DESCRIPTOR_UUID;
 
     private double levelCruiseAngleValue;
+    private double turnRateValue;
+    private double slipSkidValue;
     private double glidePathAngleValue;
     private double warningAngleValue;
     private double dangerAngleValue;
+
+    long lastMillis = 0;
+    float lastAngle;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -333,15 +362,21 @@ public class MainActivity extends AppCompatActivity {
         descentAngleUpdateButton = findViewById(R.id.descentAngleUpdateButton);
         warningAngleUpdateButton = findViewById(R.id.warningAngleUpdateButton);
         dangerAngleUpdateButton = findViewById(R.id.dangerAngleUpdateButton);
+        turnRateOffsetUpdateButton = findViewById(R.id.turnRateOffsetUpdateButton);
+//        slipSkidOffsetUpdateButton = findViewById(R.id.slipSkidOffsetUpdateButton);
 
         // Instantiate the other controls on the AircraftLayout section
         selectAircraftSpinner = findViewById(R.id.aircraftSpinner);
         editAircraftSwitch = findViewById(R.id.editAircraftSwitch);
         currentAngle = findViewById(R.id.currentAngle);
+        currentTurnRate = findViewById(R.id.currentTurnRate);
+        currentSlipSkid = findViewById(R.id.currentSlipSkid);
         levelFlight = findViewById(R.id.levelFlight);
         descentAngle = findViewById(R.id.descentAngle);
         warningAngle = findViewById(R.id.warningAngle);
         dangerAngle = findViewById(R.id.dangerAngle);
+        turnRateOffset = findViewById(R.id.turnRateOffset);
+        ballReadingMultiplier = findViewById(R.id.ballReadingMultiplier);
         addNewAircraftId = findViewById(R.id.addNewAircraftId);
         addNewAircraftButton = findViewById(R.id.addAircraftButton);
         deleteAircraftButton = findViewById(R.id.deleteAircraftButton);
@@ -358,10 +393,15 @@ public class MainActivity extends AppCompatActivity {
                     descentAngle.setEnabled(checked);
                     warningAngle.setEnabled(checked);
                     dangerAngle.setEnabled(checked);
+                    turnRateOffset.setEnabled(checked);
+                    ballReadingMultiplier.setEnabled(checked);
                     levelFlightUpdateButton.setEnabled(checked);
                     descentAngleUpdateButton.setEnabled(checked);
                     warningAngleUpdateButton.setEnabled(checked);
                     dangerAngleUpdateButton.setEnabled(checked);
+                    turnRateOffsetUpdateButton.setEnabled(checked);
+
+//                    slipSkidOffsetUpdateButton.setEnabled(checked);
                     deleteAircraftButton.setEnabled(checked);
 
                     // save values when deselecting the switch
@@ -386,7 +426,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Please enter an Aircraft ID to add it.", Toast.LENGTH_LONG).show();
                     } else {
                         String newAircraftId = addNewAircraftId.getText().toString();
-                        aircraftModel = new AircraftModel(newAircraftId, 0, 0, 0, 0);
+                        aircraftModel = new AircraftModel(newAircraftId, 0, 0, 0, 0, 0, 0);
 
                         SQLiteOpenHelper databaseHelper = new SQLiteOpenHelper(MainActivity.this);
                         if (!databaseHelper.doesAircraftExist(newAircraftId)) {
@@ -466,17 +506,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        turnRateOffsetUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double currentTurnRateReading = Double.parseDouble(currentTurnRate.getText().toString());
+                turnRateOffset.setText(String.valueOf(currentTurnRateReading));
+            }
+        });
 
+//        slipSkidOffsetUpdateButton.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                double currentSlipSkidReading = Double.parseDouble(currentSlipSkid.getText().toString());
+//                slipSkidOffset.setText(String.valueOf(currentSlipSkidReading));
+//            }
+//        });
+
+        // Instantiate the UUIDs
+        ANGLE_SERVICE_UUID              = UUID.fromString(ANGLE_SERVICE_UUID_STRING);
+        READING_CHARACTERISTIC_UUID     = UUID.fromString(READING_CHARACTERISTIC_UUID_STRING);
+        DESCRIPTOR_UUID                 = UUID.fromString(DESCRIPTOR_UUID_STRING);
 
 
         // Instantiate the arrowIndicatorLayout -
         // This is one of the two options for the AoA visual indicator
         arrowIndicatorLayout = findViewById(R.id.arrowIndicatorLayout);
 
-        ANGLE_SERVICE_UUID          = UUID.fromString(ANGLE_SERVICE_UUID_STRING);
-        ANGLE_CHARACTERISTIC1_UUID  = UUID.fromString(ANGLE_CHARACTERISTIC1_UUID_STRING);
-        //MESSAGE_CHARACTERISTIC_UUID = UUID.fromString(MESSAGE_CHARACTERISTIC_UUID_STRING);
-        DESCRIPTOR_UUID         = UUID.fromString(DESCRIPTOR_UUID_STRING);
         imageView = findViewById(R.id.indicator);
         VectorChildFinder vector        = new VectorChildFinder(this, R.drawable.ic_indicatorvector, imageView);
         dangerAnglePath                 = vector.findPathByName("DangerAngle");
@@ -487,6 +542,7 @@ public class MainActivity extends AppCompatActivity {
         negativeAnglePath               = vector.findPathByName("NegativeAngle");
         arrowCalibratedAngleTextView    = findViewById(R.id.arrowCalibratedAngleTextView);
         arrowSensorAngleTextView        = findViewById(R.id.arrowSensorAngleTextView);
+
         airfoilIndicatorButton          = findViewById(R.id.airfoilIndicatorButton);
         airfoilIndicatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -507,14 +563,22 @@ public class MainActivity extends AppCompatActivity {
         VectorChildFinder airfoilVector = new VectorChildFinder(this, R.drawable.ic_airfoil, airfoilImageView);
         airfoilPath = airfoilVector.findPathByName("airfoil");
 
-        airfoilLevelFlightImageView     = findViewById(R.id.airfoilLevelFlightImageView);
-        airfoilWarningImageView         = findViewById(R.id.airfoilWarningImageView);
-        airfoilDangerImageView          = findViewById(R.id.airfoilDangerImageView);
-        airfoilGlidePathImageView       = findViewById(R.id.airfoilGlidePathImageView);
-        airfoilNegativeAngleImageView   = findViewById(R.id.airfoilNegativeAngleImageView);
-        airfoilCalibratedAngleTextView  = findViewById(R.id.airfoilCalibratedAngleTextView);
-        airfoilSensorAngleTextView      = findViewById(R.id.airfoilSensorAngleTextView);
-        arrowIndicatorButton            = findViewById(R.id.arrowIndicatorButton);
+        airfoilLevelFlightImageView         = findViewById(R.id.airfoilLevelFlightImageView);
+        airfoilWarningImageView             = findViewById(R.id.airfoilWarningImageView);
+        airfoilDangerImageView              = findViewById(R.id.airfoilDangerImageView);
+        airfoilGlidePathImageView           = findViewById(R.id.airfoilGlidePathImageView);
+        airfoilNegativeAngleImageView       = findViewById(R.id.airfoilNegativeAngleImageView);
+        airfoilTSNeedle                     = findViewById(R.id.TS_Needle);
+        airfoilTSBall                       = findViewById(R.id.TS_Ball);
+
+        airfoilCalibratedAngleTextView      = findViewById(R.id.airfoilCalibratedAngleTextView);
+        airfoilSensorAngleTextView          = findViewById(R.id.airfoilSensorAngleTextView);
+        airfoilTurnRateTextView             = findViewById(R.id.airfoilSensorTurnRateTextView);
+        airfoilCalibratedTurnRateTextView   = findViewById(R.id.airfoilCalibratedTurnRateTextView);
+        airfoilCalibratedSlipSkidTextView   = findViewById(R.id.airfoilCalibratedSlipSkidTextView);
+
+        arrowIndicatorButton                = findViewById(R.id.arrowIndicatorButton);
+
         arrowIndicatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -526,11 +590,6 @@ public class MainActivity extends AppCompatActivity {
         btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         btAdapter = btManager.getAdapter();
         btScanner = btAdapter.getBluetoothLeScanner();
-
-//        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-//                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-//                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-//                .build();
 
         if (btAdapter != null && !btAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -552,8 +611,10 @@ public class MainActivity extends AppCompatActivity {
             double descentAngleValue = Double.parseDouble(descentAngle.getText().toString());
             double warningAngleValue = Double.parseDouble(warningAngle.getText().toString());
             double dangerAngleValue = Double.parseDouble(dangerAngle.getText().toString());
+            double turnRate         = Double.parseDouble(turnRateOffset.getText().toString());
+            double ballReading      = Double.parseDouble(ballReadingMultiplier.getText().toString());
 
-            AircraftModel aircraftModel = new AircraftModel(aircraftIdValue, levelAngleValue, descentAngleValue, warningAngleValue, dangerAngleValue);
+            AircraftModel aircraftModel = new AircraftModel(aircraftIdValue, levelAngleValue, descentAngleValue, warningAngleValue, dangerAngleValue, turnRate, ballReading);
 
             sqLiteOpenHelper.updateAirplane(aircraftModel);
         } else {
@@ -594,6 +655,8 @@ public class MainActivity extends AppCompatActivity {
         descentAngle.setText(String.valueOf(aircraftModel.getDescentAngle()));
         warningAngle.setText(String.valueOf(aircraftModel.getWarningAngle()));
         dangerAngle.setText(String.valueOf(aircraftModel.getDangerAngle()));
+        turnRateOffset.setText(String.valueOf(aircraftModel.getTurnRate()));
+        ballReadingMultiplier.setText(String.valueOf(aircraftModel.getBallReadingMultiplier()));
 
     }
 
@@ -617,24 +680,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showSensorLayout() {
+
         disclaimerLayout.setVisibility(View.GONE);
         sensorLayout.setVisibility(View.VISIBLE);
         aircraftLayout.setVisibility(View.GONE);
         arrowIndicatorLayout.setVisibility(View.GONE);
         airfoilIndicatorLayout.setVisibility(View.GONE);
+
     }
 
     private void showAircraftLayout() {
+
         disclaimerLayout.setVisibility(View.GONE);
         sensorLayout.setVisibility(View.GONE);
         aircraftLayout.setVisibility(View.VISIBLE);
         arrowIndicatorLayout.setVisibility(View.GONE);
         airfoilIndicatorLayout.setVisibility(View.GONE);
+
     }
 
     private void showArrowIndicatorLayout() {
         if (btConnected) {
+
             if (selectAircraftSpinner.getCount() > 0){
+
                 disclaimerLayout.setVisibility(View.GONE);
                 sensorLayout.setVisibility(View.GONE);
                 aircraftLayout.setVisibility(View.GONE);
@@ -642,12 +711,16 @@ public class MainActivity extends AppCompatActivity {
                 airfoilIndicatorLayout.setVisibility(View.GONE);
 
             } else {
+
                 Toast.makeText(getApplicationContext(), "No aircraft selected", Toast.LENGTH_LONG).show();
                 showAircraftLayout();
+
             }
         } else {
+
             Toast.makeText(getApplicationContext(), "No sensor connected.", Toast.LENGTH_LONG).show();
             showSensorLayout();
+
         }
     }
 
@@ -662,13 +735,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                 // grab all of the values set on the Aircraft tab
-//                glidePathAngleValue     = isNumeric(descentAngle.getText().toString())  ? levelCruiseAngleValue + Double.parseDouble(descentAngle.getText().toString()) : 0.0;
-//                warningAngleValue       = isNumeric(warningAngle.getText().toString())  ? levelCruiseAngleValue + Double.parseDouble(warningAngle.getText().toString()) : 0.0;
-//                dangerAngleValue        = isNumeric(dangerAngle.getText().toString())   ? levelCruiseAngleValue + Double.parseDouble(dangerAngle.getText().toString()) : 0.0;
                 glidePathAngleValue     = isNumeric(descentAngle.getText().toString())  ? Double.parseDouble(descentAngle.getText().toString()) : 0.0;
                 warningAngleValue       = isNumeric(warningAngle.getText().toString())  ? Double.parseDouble(warningAngle.getText().toString()) : 0.0;
                 dangerAngleValue        = isNumeric(dangerAngle.getText().toString())   ? Double.parseDouble(dangerAngle.getText().toString()) : 0.0;
-                //setAirfoilArcsPositions();
 
             } else {
                 Toast.makeText(getApplicationContext(), "No aircraft selected", Toast.LENGTH_LONG).show();
@@ -695,16 +764,36 @@ public class MainActivity extends AppCompatActivity {
 
     public void connectToDeviceSelected() {
 
-        int deviceSelected = deviceSpinner.getSelectedItemPosition();
-        bluetoothGatt = devicesDiscovered.get(deviceSelected).connectGatt(this, false, btleGattCallback );
+        if (deviceSpinner.getChildCount() > 0) {
+            int deviceSelected = deviceSpinner.getSelectedItemPosition();
+            bluetoothGatt = devicesDiscovered.get(deviceSelected).connectGatt(this, false, btleGattCallback);
+        } else {
+            Toast.makeText(getApplicationContext(), "No sensors found.", Toast.LENGTH_LONG).show();
+            connectToDevice.setVisibility(View.INVISIBLE);
+        }
 
     }
 
     public void disconnectDeviceSelected() {
         peripheralTextView.append("Disconnecting from device\n");
-        bluetoothGatt.disconnect();
+
+        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
+
+        while (bluetoothManager.getConnectionState(bluetoothGatt.getDevice(), BluetoothProfile.GATT) != BluetoothGatt.STATE_DISCONNECTED) {
+            bluetoothGatt.close();
+            bluetoothGatt.disconnect();
+        }
+        btConnected = false;
+
+        Toast.makeText(getApplicationContext(), "Sensor disconnected.", Toast.LENGTH_LONG).show();
+
+        deviceSpinner.setAdapter(null);
+        peripheralTextView.append("device disconnected\n");
+
         disconnectDevice.setVisibility(View.INVISIBLE);
-        connectToDevice.setVisibility(View.VISIBLE);
+//        connectToDevice.setVisibility(View.VISIBLE);
+        connectToDevice.setVisibility(deviceSpinner.getChildCount() > 0 ? View.VISIBLE : View.INVISIBLE);
+
     }
 
     public void startScanning() {
@@ -724,7 +813,6 @@ public class MainActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
                 btScanner.startScan(leScanCallback);
             }
         });
@@ -760,33 +848,38 @@ public class MainActivity extends AppCompatActivity {
         // Loops through available GATT Services.
         for (BluetoothGattService gattService : gattServices) {
 
-            final String uuid = gattService.getUuid().toString();
-            System.out.println("Service discovered: " + uuid);
-            MainActivity.this.runOnUiThread(new Runnable() {
-                public void run() {
-                    peripheralTextView.append("Service disovered: " + uuid + "\n");
-                }
-            });
+            if (gattService.getUuid().equals(ANGLE_SERVICE_UUID)) {
 
-            new ArrayList<HashMap<String, String>>();
-            List<BluetoothGattCharacteristic> gattCharacteristics =
-                    gattService.getCharacteristics();
-
-            // Loops through available Characteristics.
-            for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-
-                final String charUuid = gattCharacteristic.getUuid().toString();
-                //String charValue = new String(gattCharacteristic.getValue());
-                System.out.println("Characteristic discovered for service: " + charUuid);
+                final String uuid = gattService.getUuid().toString();
+                System.out.println("Service discovered: " + uuid);
                 MainActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
-                        peripheralTextView.append(
-                                "Characteristic discovered for service: " + charUuid
-                                        + "\n"
-                        );
+                        peripheralTextView.append("Service disovered: " + uuid + "\n");
                     }
                 });
 
+
+
+                new ArrayList<HashMap<String, String>>();
+                List<BluetoothGattCharacteristic> gattCharacteristics =
+                        gattService.getCharacteristics();
+
+                // Loops through available Characteristics.
+                for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+
+                    final String charUuid = gattCharacteristic.getUuid().toString();
+                    //String charValue = new String(gattCharacteristic.getValue());
+                    System.out.println("Characteristic discovered for service: " + charUuid);
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            peripheralTextView.append(
+                                    "Characteristic discovered for service: " + charUuid
+                                            + "\n"
+                            );
+                        }
+                    });
+
+                }
             }
         }
     }
@@ -821,28 +914,71 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
+
     // Device connect call back
     private final BluetoothGattCallback btleGattCallback = new BluetoothGattCallback() {
+
+
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
 
-            if (characteristic.getUuid().equals(ANGLE_CHARACTERISTIC1_UUID)) { // && reading.split(",").length == 2) {
+            BluetoothGattService service = gatt.getService(ANGLE_SERVICE_UUID);
+            BluetoothGattCharacteristic readingCharacteristic = service.getCharacteristic(READING_CHARACTERISTIC_UUID);
 
-                byte[] b = characteristic.getValue();
-                DecimalFormat df = new DecimalFormat("#.#");
-                float reading = ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                String strReading = df.format(reading);
-                float formattedReading = Float.parseFloat(strReading);
-                levelCruiseAngleValue   = isNumeric(levelFlight.getText().toString()) ? Double.parseDouble(levelFlight.getText().toString()) : 0.0;
+            gatt.readCharacteristic(readingCharacteristic);
+
+            DecimalFormat df = new DecimalFormat("#.#");
+            DecimalFormat dfTS = new DecimalFormat("#.###");
+
+            String reading = new String(characteristic.getValue(), StandardCharsets.UTF_8);
+
+            System.out.println(String.format("reading: %s", reading));
+
+            String[] readings = reading.split(",");
+
+            if (readings.length == 3) {
+                float angleReading = Float.parseFloat(readings[0]);
+                if (Float.isNaN(angleReading)) {
+                    angleReading = lastAngle;
+                }
+
+                float turnRateReading = Float.parseFloat(readings[1]);
+                if (Float.isNaN(turnRateReading)) {
+                    turnRateReading = turnRateReading = 0.0f;
+                }
+
+                float slipSkidReading = Float.parseFloat(readings[2]);
+                if (Float.isNaN(slipSkidReading)) {
+                    slipSkidReading = 0.0f;
+                }
+
+                String strAngleReading = df.format(angleReading);
+                float formattedAngleReading = Float.parseFloat(strAngleReading);
+                levelCruiseAngleValue = isNumeric(levelFlight.getText().toString()) ? Double.parseDouble(levelFlight.getText().toString()) : 0.0;
                 dangerAngleValue = Double.parseDouble(dangerAngle.getText().toString());
+
+
+                String strTurnRateReading = df.format(turnRateReading);
+                float formattedTurnRateReading = Float.parseFloat( isNumeric(strTurnRateReading)?strTurnRateReading:"0.0");
+                turnRateValue = isNumeric(turnRateOffset.getText().toString()) ? Double.parseDouble(turnRateOffset.getText().toString()) : 0.0f;
+
+                String strSlipSkidReading = dfTS.format(slipSkidReading);
+                float formattedSlipSkidReading = Float.parseFloat( isNumeric(strSlipSkidReading)?strSlipSkidReading:"0.0");
+
+
+                float finalAngleReading = angleReading;
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
+
 //                        currentAngle.setText(String.format("%.2f", reading));
-                        currentAngle.setText(strReading);
+                        currentAngle.setText(strAngleReading);
+                        currentTurnRate.setText(strTurnRateReading);
+                        currentSlipSkid.setText(strSlipSkidReading);
 
                         // these two floats determine how opaque the backgrounds
                         // are on the arrow-type indicator - lightOn is fully opaque,
@@ -853,15 +989,11 @@ public class MainActivity extends AppCompatActivity {
                         // Arrow Indicator Type
                         if (arrowIndicatorLayout.getVisibility() == View.VISIBLE) {
 
-//                            float calibratedReading = reading - (float)levelCruiseAngleValue;
-                            float calibratedReading = formattedReading - (float)levelCruiseAngleValue;
-
-//                            arrowSensorAngleTextView.setText(String.format("%.1f",reading));
-                            arrowSensorAngleTextView.setText(strReading);
+                            float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
+                            arrowSensorAngleTextView.setText(strAngleReading);
                             arrowCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
 
                             // Danger Angle
-//                            if (reading2 <= dangerAngleValue + 1.0) {
                             if (calibratedReading <= dangerAngleValue + 1.0) {
                                 dangerAnglePath.setFillAlpha(lightOn);
                             } else {
@@ -869,23 +1001,20 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             // Warning Angle
-//                            if (reading2 <= warningAngleValue + 1 && reading2 >= dangerAngleValue ) { //warningAngle && reading2 >= dangerAngle) {
-                            if (calibratedReading <= warningAngleValue + 1 && calibratedReading >= dangerAngleValue ) { //warningAngle && reading2 >= dangerAngle) {
+                            if (calibratedReading <= warningAngleValue + 1 && calibratedReading >= dangerAngleValue) { //warningAngle && reading2 >= dangerAngle) {
                                 warningAnglePath.setFillAlpha(lightOn);
                             } else {
                                 warningAnglePath.setFillAlpha(lightOff);
                             }
 
                             // Upper Glide Path Angle
-//                            if (reading2 <= glidePathAngleValue + 1  && reading2 >= warningAngleValue) {
-                            if (calibratedReading <= glidePathAngleValue + 1  && calibratedReading >= warningAngleValue) {
+                            if (calibratedReading <= glidePathAngleValue + 1 && calibratedReading >= warningAngleValue) {
                                 upperGlidePathAnglePath.setFillAlpha(lightOn);
                             } else {
                                 upperGlidePathAnglePath.setFillAlpha(lightOff);
                             }
 
                             // Lower Glide Path Angle
-//                            if (reading2 <= levelCruiseAngleValue && reading2 >= glidePathAngleValue - 1) {
                             if (calibratedReading <= -1 && calibratedReading >= glidePathAngleValue - 1) {
                                 lowerGlidePathAnglePath.setFillAlpha(lightOn);
                             } else {
@@ -893,7 +1022,6 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             // Level Cruise
-//                            if (reading2 >= levelCruiseAngleValue - 1 && reading2 <= levelCruiseAngleValue + 1) {
                             if (calibratedReading <= 2 && calibratedReading >= -2) {
                                 levelCruiseAnglePath.setFillAlpha(lightOn);
                             } else {
@@ -901,7 +1029,6 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             // Negative Angle
-//                            if (reading2 > levelCruiseAngleValue + 1) {
                             if (calibratedReading >= 1) {
                                 negativeAnglePath.setFillAlpha(lightOn);
                             } else {
@@ -909,7 +1036,6 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             imageView.invalidate();
-
                             controlAudibleWarning(calibratedReading);
 
                         }
@@ -917,8 +1043,9 @@ public class MainActivity extends AppCompatActivity {
                         // Airfoil Indicator Type
                         if (airfoilIndicatorLayout.getVisibility() == View.VISIBLE) {
 
-                            //float calibratedReading = reading - (float)levelCruiseAngleValue;
-                            float calibratedReading = formattedReading - (float)levelCruiseAngleValue;
+                            float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
+                            float calibratedTurnRateReading = formattedTurnRateReading - (float) turnRateValue;
+                            float calibratedSlipSkidReading = formattedSlipSkidReading - (float) slipSkidValue;
 
                             if (calibratedReading < -60f) {
                                 calibratedReading = -60f;
@@ -926,43 +1053,91 @@ public class MainActivity extends AppCompatActivity {
                                 calibratedReading = 60f;
                             }
 
-
-
-                            airfoilSensorAngleTextView.setText(String.format("%.1f",reading));
+                            airfoilSensorAngleTextView.setText(String.format("%.1f", finalAngleReading));
                             airfoilCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
+                            airfoilTurnRateTextView.setText(String.format("%.1f", formattedTurnRateReading));
+                            airfoilCalibratedTurnRateTextView.setText(String.format("%.1f", calibratedTurnRateReading));
+                            airfoilCalibratedSlipSkidTextView.setText(String.format("%.2f", calibratedSlipSkidReading));
+
 
                             setAirfoilArcsPositions();
 
                             // Change the color of the airfoil, depending on its current value
-                            if (calibratedReading - 1.0 <= dangerAngleValue) {
-                                // Turn it RED
-                                airfoilPath.setFillColor(0xFFFF5555);
-                                airfoilPath.setStrokeColor(0xFFCC2222);
-                            } else if (calibratedReading - 1.0 <= warningAngleValue) {
-                                // Turn it YELLOW
-                                airfoilPath.setFillColor(0xFFFFFF55);
-                                airfoilPath.setStrokeColor(0xFFCCAA33);
-                            } else {
-                                //Turn it BLUE
-                                airfoilPath.setFillColor(0xFF9BBAF8);
-                                airfoilPath.setStrokeColor(0xFF728FC8);
-                            }
+                                if (calibratedReading - 1.0 <= dangerAngleValue) {
+                                    // Turn it RED
+                                    airfoilPath.setFillColor(0xFFFF5555);
+                                    airfoilPath.setStrokeColor(0xFFCC2222);
+//                                    } else if (calibratedReading - 1.0 <= warningAngleValue) {
+//                                        // Turn it YELLOW
+//                                        airfoilPath.setFillColor(0xFFFFFF55);
+//                                        airfoilPath.setStrokeColor(0xFFCCAA33);
+                                } else {
+                                    //Turn it BLUE
+                                    airfoilPath.setFillColor(0xFF9BBAF8);
+                                    airfoilPath.setStrokeColor(0xFF728FC8);
+                                }
 
                             //airfoilImageView.invalidate();
 
-
+                            if (Float.isNaN(lastAngle)) {
+                                lastAngle = 0.0f;
+                            }
 
                             RotateAnimation rotateAirfoil = new RotateAnimation(
-                                -(calibratedReading * ANGLE_MULTIPLIER), -(calibratedReading * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                                    -(lastAngle * ANGLE_MULTIPLIER), -(calibratedReading * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                             );
-                            rotateAirfoil.setDuration(100);
-                            rotateAirfoil.setRepeatCount(Animation.INFINITE);
+                            rotateAirfoil.setDuration(RECEIVE_INTERVAL);
+                            //rotateAirfoil.setRepeatCount(Animation.INFINITE);
+                            rotateAirfoil.setInterpolator(new FastOutSlowInInterpolator());// AccelerateDecelerateInterpolator()); // LinearInterpolator()); // new AccelerateDecelerateInterpolator()); // LinearInterpolator());
+                            rotateAirfoil.setFillAfter(true);
                             airfoilImageView.startAnimation(rotateAirfoil);
 
                             //System.out.println(String.format("reading: %s | levelCruiseAngleValue: %s | warningAngleValue: %s | dangerAngleValue: %s | calibratedReading: %s", reading, levelCruiseAngleValue, warningAngleValue, dangerAngleValue, calibratedReading));
 
                             controlAudibleWarning(calibratedReading);
 
+                            lastAngle = (calibratedReading);
+                            //lastMillis = currentMillis;
+
+                            float turnRateNeedleDegrees;
+                            if (calibratedTurnRateReading * 10 > 60) {
+                                turnRateNeedleDegrees = 60;
+                            } else if (calibratedTurnRateReading * 10 < -60) {
+                                turnRateNeedleDegrees = -60;
+                            } else {
+                                turnRateNeedleDegrees = calibratedTurnRateReading * 10;
+                            }
+
+                            RotateAnimation rotateTurnAndSlipNeedle = new RotateAnimation(
+                                turnRateNeedleDegrees,
+                                turnRateNeedleDegrees,
+                                Animation.RELATIVE_TO_SELF, 0.5f,
+                                Animation.RELATIVE_TO_SELF, 0.5f
+                            );
+                            rotateTurnAndSlipNeedle.setDuration(RECEIVE_INTERVAL);
+                            rotateTurnAndSlipNeedle.setInterpolator(new FastOutSlowInInterpolator());
+                            airfoilTSNeedle.startAnimation(rotateTurnAndSlipNeedle);
+
+                            float ballSway;
+                            float swayMultiplier = -250.0f;
+
+                            if (!Float.isNaN(Float.parseFloat(ballReadingMultiplier.getText().toString()))) {
+                                swayMultiplier = Float.parseFloat(ballReadingMultiplier.getText().toString());
+                            }
+
+                            if (calibratedSlipSkidReading * swayMultiplier > 100) {
+                                ballSway = 100;
+                            } else if (calibratedSlipSkidReading * swayMultiplier < -100) {
+                                ballSway = -100;
+                            } else {
+                                ballSway = calibratedSlipSkidReading * swayMultiplier;
+                            }
+
+                            ObjectAnimator slideSlipSkidBall = ObjectAnimator.ofFloat(airfoilTSBall, "translationX", ballSway);
+                            slideSlipSkidBall.setDuration(RECEIVE_INTERVAL);
+                            slideSlipSkidBall.start();
+
+//                            }
                         }
                     }
                 });
@@ -1121,18 +1296,14 @@ public class MainActivity extends AppCompatActivity {
                     peripheralTextView.append("device services have been discovered\n");
 
                     BluetoothGattService angleService = gatt.getService(ANGLE_SERVICE_UUID);
-                    BluetoothGattCharacteristic angleCharacteristic = angleService.getCharacteristic(ANGLE_CHARACTERISTIC1_UUID);
+                    BluetoothGattCharacteristic readingCharacteristic = angleService.getCharacteristic(READING_CHARACTERISTIC_UUID);
+                    BluetoothGattDescriptor readingDescriptor = readingCharacteristic.getDescriptor(DESCRIPTOR_UUID);
+                    readingDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
 
-                    BluetoothGattDescriptor angleDescriptor = angleCharacteristic.getDescriptor(DESCRIPTOR_UUID);
-                    angleDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-
-                    gatt.writeDescriptor(angleDescriptor);
-                    //gatt.writeDescriptor(messageDescriptor);
-                    gatt.setCharacteristicNotification(angleCharacteristic, true);
-                    //gatt.setCharacteristicNotification(messageCharacteristic, true);
-
-                    gatt.writeCharacteristic(angleCharacteristic);
-                    //gatt.writeCharacteristic(messageCharacteristic);
+                    gatt.writeDescriptor(readingDescriptor);
+                    gatt.setCharacteristicNotification(readingCharacteristic, true);
+                    gatt.writeCharacteristic(readingCharacteristic);
+                    gatt.readCharacteristic(readingCharacteristic);
 
                 }
             });
@@ -1146,7 +1317,7 @@ public class MainActivity extends AppCompatActivity {
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
 
-            peripheralTextView.append(characteristic.getValue().toString());
+            //peripheralTextView.append(characteristic.getValue().toString());
 
         }
 
@@ -1159,22 +1330,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-//        @Override
-//        // besides just reading a descriptor, you can actually send date back to the device as well
-//        // I don't think this will ever actually fire ...
-//        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-//
-//            BluetoothGattCharacteristic angleCharacteristic =
-//                    gatt.getService(ANGLE_SERVICE_UUID)
-//                            .getCharacteristic(ANGLE_CHARACTERISTIC1_UUID);
-//
-//
-//            angleCharacteristic.setValue(new byte[] {1,1});
-//
-//            gatt.writeCharacteristic(angleCharacteristic);
-//
-//        }
     };
-
 
 }
