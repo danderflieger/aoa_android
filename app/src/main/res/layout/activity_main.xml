@@ -557,11 +557,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="-50dp"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-35dp"
             >
 
             <ImageView
@@ -651,9 +651,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="0dp"
                 android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
                 android:text="Sensor Angle:"
                 android:visibility="visible" />
@@ -662,10 +662,10 @@
                 android:id="@+id/airfoilSensorAngleTextView"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="0dp"
                 android:text="0"
                 android:textAlignment="textEnd"
                 android:visibility="visible" />
@@ -675,8 +675,8 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_above="@+id/airfoilSensorAngleTextView"
-                android:layout_marginRight="10dp"
+                android:layout_below="@+id/airfoilSensorAngleTextView"
+                android:layout_marginRight="0dp"
                 android:layout_marginBottom="0dp"
                 android:text="0"
                 android:textAlignment="textEnd"
@@ -685,8 +685,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/airfoilSensorAngleTextView"
-                android:layout_marginEnd="10dp"
+                android:layout_below="@+id/airfoilSensorAngleTextView"
+                android:layout_marginEnd="0dp"
                 android:layout_marginBottom="0dp"
                 android:layout_toStartOf="@+id/airfoilSensorAngleTextView"
                 android:text="Calibrated Angle:"
@@ -698,32 +698,33 @@
 
         <RelativeLayout
             android:id="@+id/AirfoilTextOutput"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true">
 
 
             <TextView
                 android:id="@+id/airfoilSensorTurnRateTextView"
-                android:layout_width="50dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginRight="0dp"
                 android:text="0"
-                android:textAlignment="textEnd"
-                android:visibility="invisible" />
+                android:textAlignment="center"
+                android:visibility="visible" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="50dp"
-                android:layout_toStartOf="@+id/airfoilSensorTurnRateTextView"
-                android:text="Sensor Turn Rate:"
-                android:visibility="invisible" />
+<!--            <TextView-->
+<!--                android:layout_width="250dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentTop="true"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginEnd="0dp"-->
+<!--                android:layout_toStartOf="@+id/airfoilSensorTurnRateTextView"-->
+<!--                android:text="Sensor Turn Rate:"-->
+<!--                android:visibility="invisible" />-->
 
             <TextView
                 android:id="@+id/airfoilCalibratedTurnRateTextView"
@@ -739,12 +740,12 @@
 
             <TextView
                 android:id="@+id/airfoilCalibratedSlipSkidTextView"
-                android:layout_width="50dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="75dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="40dp"
                 android:text="0"
                 android:textAlignment="center"
                 android:visibility="visible" />

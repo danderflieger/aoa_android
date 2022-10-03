@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout airfoilIndicatorLayout;
     ImageView airfoilImageView;
     VectorDrawableCompat.VFullPath airfoilPath;
+    VectorDrawableCompat.VFullPath ballChamberPath;
 
     ImageView airfoilLevelFlightImageView;
     ImageView airfoilGlidePathImageView;
@@ -946,7 +947,7 @@ public class MainActivity extends AppCompatActivity {
 
                 float turnRateReading = Float.parseFloat(readings[1]);
                 if (Float.isNaN(turnRateReading)) {
-                    turnRateReading = turnRateReading = 0.0f;
+                    turnRateReading = 0.0f;
                 }
 
                 float slipSkidReading = Float.parseFloat(readings[2]);
@@ -1047,23 +1048,23 @@ public class MainActivity extends AppCompatActivity {
                             float calibratedTurnRateReading = formattedTurnRateReading - (float) turnRateValue;
                             float calibratedSlipSkidReading = formattedSlipSkidReading - (float) slipSkidValue;
 
-                            if (calibratedReading < -60f) {
-                                calibratedReading = -60f;
-                            } else if (calibratedReading > 60f) {
-                                calibratedReading = 60f;
+                            if (calibratedReading < -60) {
+                                calibratedReading = -60;
+                            } else if (calibratedReading > 60) {
+                                calibratedReading = 60;
                             }
 
                             airfoilSensorAngleTextView.setText(String.format("%.1f", finalAngleReading));
                             airfoilCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
-                            airfoilTurnRateTextView.setText(String.format("%.1f", formattedTurnRateReading));
-                            airfoilCalibratedTurnRateTextView.setText(String.format("%.1f", calibratedTurnRateReading));
+                            //airfoilTurnRateTextView.setText(String.format("%.1f", formattedTurnRateReading));
+                            airfoilTurnRateTextView.setText(String.format("%.2f", calibratedTurnRateReading));
+                            airfoilCalibratedTurnRateTextView.setText(String.format("%.2f", calibratedTurnRateReading));
                             airfoilCalibratedSlipSkidTextView.setText(String.format("%.2f", calibratedSlipSkidReading));
-
 
                             setAirfoilArcsPositions();
 
                             // Change the color of the airfoil, depending on its current value
-                                if (calibratedReading - 1.0 <= dangerAngleValue) {
+                                if (calibratedReading - 1.0f <= dangerAngleValue) {
                                     // Turn it RED
                                     airfoilPath.setFillColor(0xFFFF5555);
                                     airfoilPath.setStrokeColor(0xFFCC2222);
@@ -1100,10 +1101,10 @@ public class MainActivity extends AppCompatActivity {
                             //lastMillis = currentMillis;
 
                             float turnRateNeedleDegrees;
-                            if (calibratedTurnRateReading * 10 > 60) {
-                                turnRateNeedleDegrees = 60;
-                            } else if (calibratedTurnRateReading * 10 < -60) {
-                                turnRateNeedleDegrees = -60;
+                            if (calibratedTurnRateReading * 10 > 60f) {
+                                turnRateNeedleDegrees = 60f;
+                            } else if (calibratedTurnRateReading * 10 < -60f) {
+                                turnRateNeedleDegrees = -60f;
                             } else {
                                 turnRateNeedleDegrees = calibratedTurnRateReading * 10;
                             }
@@ -1119,18 +1120,28 @@ public class MainActivity extends AppCompatActivity {
                             airfoilTSNeedle.startAnimation(rotateTurnAndSlipNeedle);
 
                             float ballSway;
+                            ImageView gauge = findViewById(R.id.TS_GaugeFace);
+                            int gaugeWidth = (gauge.getWidth()/3);
                             float swayMultiplier = -250.0f;
 
                             if (!Float.isNaN(Float.parseFloat(ballReadingMultiplier.getText().toString()))) {
                                 swayMultiplier = Float.parseFloat(ballReadingMultiplier.getText().toString());
                             }
 
-                            if (calibratedSlipSkidReading * swayMultiplier > 100) {
-                                ballSway = 100;
-                            } else if (calibratedSlipSkidReading * swayMultiplier < -100) {
-                                ballSway = -100;
+//                            if (calibratedSlipSkidReading * swayMultiplier > 90) {
+//                                ballSway = 90;
+//                            } else if (calibratedSlipSkidReading * swayMultiplier < -90) {
+//                                ballSway = -90;
+//                            } else {
+//                                ballSway = calibratedSlipSkidReading * swayMultiplier;
+//                            }
+
+                            if ((calibratedSlipSkidReading * swayMultiplier) > gaugeWidth) {
+                                ballSway = gaugeWidth/2;
+                            } else if ((calibratedSlipSkidReading * swayMultiplier) < -gaugeWidth) {
+                                ballSway = -(gaugeWidth/2);
                             } else {
-                                ballSway = calibratedSlipSkidReading * swayMultiplier;
+                                ballSway = (calibratedSlipSkidReading * swayMultiplier)/2;
                             }
 
                             ObjectAnimator slideSlipSkidBall = ObjectAnimator.ofFloat(airfoilTSBall, "translationX", ballSway);

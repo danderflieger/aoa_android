@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="TurnAndSlipVector.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     width="100mm"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="294.50997"
+     inkscape:cy="110.66221"
+     inkscape:window-width="1698"
+     inkscape:window-height="1167"
+     inkscape:window-x="239"
+     inkscape:window-y="105"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer2">
+    <sodipodi:guide
+       position="-2.6762534,50.008188"
+       orientation="0,-1"
+       id="guide857" />
+    <sodipodi:guide
+       position="50.010309,109.35567"
+       orientation="1,0"
+       id="guide859" />
+    <sodipodi:guide
+       position="30.916402,38.000569"
+       orientation="1,0"
+       id="guide1021" />
+    <sodipodi:guide
+       position="79.986898,81.115874"
+       orientation="1,0"
+       id="guide1023" />
+    <sodipodi:guide
+       position="24.296772,80.033345"
+       orientation="0,-1"
+       id="guide1025" />
+    <sodipodi:guide
+       position="44.864832,84.00262"
+       orientation="0,-1"
+       id="guide1580" />
+    <sodipodi:guide
+       position="46.007502,93.384542"
+       orientation="1,0"
+       id="guide1582" />
+    <sodipodi:guide
+       position="53.976121,92.09152"
+       orientation="1,0"
+       id="guide1584" />
+    <sodipodi:guide
+       position="44.774621,88.001965"
+       orientation="0,-1"
+       id="guide1833" />
+    <sodipodi:guide
+       position="48.262771,80.514469"
+       orientation="0,-1"
+       id="guide2551" />
+    <sodipodi:guide
+       position="45.225675,81.296296"
+       orientation="0,-1"
+       id="guide2586" />
+    <sodipodi:guide
+       position="46.99982,93.625104"
+       orientation="1,0"
+       id="guide2588" />
+    <sodipodi:guide
+       position="53.002596,94.140057"
+       orientation="1,0"
+       id="guide2590" />
+    <sodipodi:guide
+       position="35.263997,46.000195"
+       orientation="0,-1"
+       id="guide3413" />
+    <sodipodi:guide
+       position="21.842602,38.000569"
+       orientation="0,-1"
+       id="guide3415" />
+    <sodipodi:guide
+       position="30.916402,73.854359"
+       orientation="1,0"
+       id="guide858" />
+    <sodipodi:guide
+       position="69.035717,120.76684"
+       orientation="1,0"
+       id="guide860" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient2709"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop2707" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2331"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop2329" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2331"
+       id="linearGradient2333"
+       x1="45.875211"
+       y1="15.954769"
+       x2="54.108412"
+       y2="15.954769"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="rotate(-30,47.664481,50.604309)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2331"
+       id="linearGradient2436"
+       gradientUnits="userSpaceOnUse"
+       x1="45.875211"
+       y1="15.954769"
+       x2="54.108412"
+       y2="15.954769"
+       gradientTransform="rotate(30,52.364002,50.633651)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2709"
+       id="linearGradient2711"
+       x1="45.87521"
+       y1="15.741782"
+       x2="54.108412"
+       y2="15.741782"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="Gauge Face">
+    <circle
+       style="fill:#333333;fill-rule:evenodd"
+       id="path1042"
+       cx="50.010307"
+       cy="38.540264"
+       r="36.424652" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Alignment Marks"
+     style="display:none">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 50.010308,49.991811 C 79.986898,-1.9291639 79.986898,-1.9291639 79.986898,-1.9291639"
+       id="path2980" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 50.010308,49.991811 C 19.966654,-2.0453257 19.966654,-2.0453257 19.966654,-2.0453257"
+       id="path2982" />
+  </g>
+  <g
+     inkscape:label="Background Marks"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:url(#linearGradient2333);fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 30.392893,15.997379 -1.46686,5.464937 1.984637,3.437493 6.901027,-3.984309 -1.984638,-3.437493 z"
+       id="path1365"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:url(#linearGradient2436);fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 69.643451,15.997379 -5.466205,1.462131 -1.984638,3.437493 6.901027,3.984309 1.984637,-3.437493 z"
+       id="path2434"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:url(#linearGradient2711);stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="m 46.007501,11.998034 h 7.96862 v 6.705669 l -0.973526,0.781827 h -6.002774 l -0.99232,-0.781827 v -6.705669 0"
+       id="path2705" />
+    <rect
+       style="fill:#ffffff;stroke:none;stroke-width:0.673934"
+       id="rect3086"
+       width="38.119312"
+       height="7.9996262"
+       x="30.916403"
+       y="53.999805" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Ball">
+    <ellipse
+       style="fill:#000080;fill-rule:evenodd;stroke-width:0.264583"
+       id="path4755"
+       ry="3.99981"
+       rx="3.9843113"
+       cy="57.999619"
+       cx="49.991814" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="CoordinationMarks">
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:0.84564"
+       id="rect3232"
+       width="0.97352362"
+       height="7.9996271"
+       x="53.97612"
+       y="53.999805" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:0.845126"
+       id="rect3208"
+       width="0.99231833"
+       height="7.9996233"
+       x="45.015186"
+       y="53.999805" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Arrow">
+    <rect
+       style="fill:#1a1a1a;stroke:none;stroke-width:1"
+       id="rect4030"
+       width="6.0027761"
+       height="20.556915"
+       x="46.999821"
+       y="29.434895"
+       inkscape:transform-center-x="0.12289583"
+       inkscape:transform-center-y="-10.082547" />
+    <rect
+       style="fill:#ffffff;stroke:none;stroke-width:1"
+       id="rect4220"
+       width="7.9686189"
+       height="9.4020958"
+       x="46.007504"
+       y="19.966656"
+       inkscape:transform-center-x="0.13229167"
+       inkscape:transform-center-y="-25.128196" />
+  </g>
+</svg>

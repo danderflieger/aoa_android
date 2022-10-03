@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="TS_Bars.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title1261">GaugeFace</title>
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     width="100mm"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="294.50997"
+     inkscape:cy="110.66221"
+     inkscape:window-width="1698"
+     inkscape:window-height="1167"
+     inkscape:window-x="643"
+     inkscape:window-y="107"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer5">
+    <sodipodi:guide
+       position="-2.6762534,50.008188"
+       orientation="0,-1"
+       id="guide857" />
+    <sodipodi:guide
+       position="50.010309,109.35567"
+       orientation="1,0"
+       id="guide859" />
+    <sodipodi:guide
+       position="30.916402,38.000569"
+       orientation="1,0"
+       id="guide1021" />
+    <sodipodi:guide
+       position="79.986898,81.115874"
+       orientation="1,0"
+       id="guide1023" />
+    <sodipodi:guide
+       position="24.296772,80.033345"
+       orientation="0,-1"
+       id="guide1025" />
+    <sodipodi:guide
+       position="44.864832,84.00262"
+       orientation="0,-1"
+       id="guide1580" />
+    <sodipodi:guide
+       position="46.007502,93.384542"
+       orientation="1,0"
+       id="guide1582" />
+    <sodipodi:guide
+       position="53.976121,92.09152"
+       orientation="1,0"
+       id="guide1584" />
+    <sodipodi:guide
+       position="44.774621,88.001965"
+       orientation="0,-1"
+       id="guide1833" />
+    <sodipodi:guide
+       position="48.262771,80.514469"
+       orientation="0,-1"
+       id="guide2551" />
+    <sodipodi:guide
+       position="45.225675,81.296296"
+       orientation="0,-1"
+       id="guide2586" />
+    <sodipodi:guide
+       position="46.99982,93.625104"
+       orientation="1,0"
+       id="guide2588" />
+    <sodipodi:guide
+       position="53.002596,94.140057"
+       orientation="1,0"
+       id="guide2590" />
+    <sodipodi:guide
+       position="35.263997,46.000195"
+       orientation="0,-1"
+       id="guide3413" />
+    <sodipodi:guide
+       position="21.842602,38.000569"
+       orientation="0,-1"
+       id="guide3415" />
+    <sodipodi:guide
+       position="30.916402,73.854359"
+       orientation="1,0"
+       id="guide858" />
+    <sodipodi:guide
+       position="69.035717,120.76684"
+       orientation="1,0"
+       id="guide860" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient2709"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop2707" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2331"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop2329" />
+    </linearGradient>
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="CoordinationMarks"
+     style="display:inline">
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:0.84564"
+       id="rect3232"
+       width="0.97352362"
+       height="7.9996271"
+       x="53.97612"
+       y="53.999805" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:0.845126"
+       id="rect3208"
+       width="0.99231833"
+       height="7.9996233"
+       x="45.015186"
+       y="53.999805" />
+  </g>
+  <metadata
+     id="metadata1259">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>GaugeFace</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>

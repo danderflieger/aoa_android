@@ -1,7 +1,7 @@
 <vector
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="100dp"
-    android:height="100dp"
+    android:width="100px"
+    android:height="100px"
     android:viewportWidth="100"
     android:viewportHeight="100">
   <path
@@ -16,10 +16,12 @@
       android:strokeColor="#00000000"
       android:strokeLineCap="butt"/>
   <path
+      android:name="ballChamberPath"
       android:pathData="M30.916,54h38.119v8h-38.119z"
       android:strokeWidth="0.673934"
       android:fillColor="#ffffff"
       android:strokeColor="#00000000"/>
+
   <path
       android:pathData="m30.393,15.997 l-1.467,5.465 1.985,3.437 6.901,-3.984 -1.985,-3.437z"
       android:strokeLineJoin="miter"
