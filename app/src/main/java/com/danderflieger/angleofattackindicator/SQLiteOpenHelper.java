@@ -25,8 +25,8 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
                 " aircraftId TEXT PRIMARY KEY, " +
                 " levelCruiseAngle REAL,   " +
                 " descentAngle REAL, " +
-                " warningAngle REAL," +
                 " dangerAngle REAL, " +
+                " dangerAngleFlaps REAL, " +
                 " turnRate REAL, " +
                 "ballReadingMultiplier REAL " +
             ") ";
@@ -47,8 +47,9 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
         cv.put("aircraftId", aircraft.getAircraftId());
         cv.put("levelCruiseAngle", aircraft.getLevelCruiseAngle());
         cv.put("descentAngle", aircraft.getDescentAngle());
-        cv.put("warningAngle", aircraft.getWarningAngle());
+//        cv.put("warningAngle", aircraft.getDangerAngle());
         cv.put("dangerAngle", aircraft.getDangerAngle());
+        cv.put("dangerAngleFlaps", aircraft.getDangerAngleFlaps());
         cv.put("turnRate", aircraft.getTurnRate());
         cv.put("ballReadingMultiplier", aircraft.getBallReadingMultiplier());
 
@@ -75,8 +76,9 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
         cv.put("aircraftId", aircraft.getAircraftId());
         cv.put("levelCruiseAngle", aircraft.getLevelCruiseAngle());
         cv.put("descentAngle", aircraft.getDescentAngle());
-        cv.put("warningAngle", aircraft.getWarningAngle());
+//        cv.put("warningAngle", aircraft.getWarningAngle());
         cv.put("dangerAngle", aircraft.getDangerAngle());
+        cv.put("dangerAngleFlaps", aircraft.getDangerAngleFlaps());
         cv.put("turnRate", aircraft.getTurnRate());
         cv.put("ballReadingMultiplier", aircraft.getBallReadingMultiplier());
 
@@ -121,8 +123,9 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
                 cursor.getString(0), // aircraftId
                 cursor.getDouble(1), // levelCruiseAngle
                 cursor.getDouble(2), // glidePathAngle
-                cursor.getDouble(3), // warningAngle
-                cursor.getDouble(4), // dangerAngle
+//                cursor.getDouble(3), // warningAngle
+                cursor.getDouble(3), // dangerAngle
+                cursor.getDouble(4), // dangerAngleFlaps
                 cursor.getDouble(5), // turnRate
                 cursor.getDouble(6)  // ballReadingMultiplier
         );

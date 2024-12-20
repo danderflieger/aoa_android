@@ -15,6 +15,7 @@
     <color name="medium_gray">#FF555555</color>
     <color name="light_gray">#FFCCCCCC</color>
     <color name="danger_red">#FFDD3333</color>
+    <color name="dark_red">#FF552222</color>
     <color name="light_green">#FFCCFFCC</color>
     <color name="dark_green">#FF55FF55</color>
     <color name="airfoil_background">#FF9BBAF8</color>

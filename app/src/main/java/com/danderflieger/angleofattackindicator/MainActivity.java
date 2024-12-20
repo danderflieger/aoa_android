@@ -54,6 +54,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -69,6 +70,8 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -118,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
     Button descentAngleUpdateButton;
     Button warningAngleUpdateButton;
     Button dangerAngleUpdateButton;
+    Button dangerAngleFlapsUpdateButton;
     Button turnRateOffsetUpdateButton;
 //    Button slipSkidOffsetUpdateButton;
     Switch editAircraftSwitch;
@@ -130,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
     EditText descentAngle;
     EditText warningAngle;
     EditText dangerAngle;
+    EditText warningAngleFlaps;
+    EditText dangerAngleFlaps;
     EditText turnRateOffset;
     EditText ballReadingMultiplier;
     EditText addNewAircraftId;
@@ -140,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView;
     VectorDrawableCompat.VFullPath dangerAnglePath;
     VectorDrawableCompat.VFullPath warningAnglePath;
+    VectorDrawableCompat.VFullPath dangerAngleFlapsPath;
+    VectorDrawableCompat.VFullPath warningAngleFlapsPath;
     VectorDrawableCompat.VFullPath upperGlidePathAnglePath;
     VectorDrawableCompat.VFullPath lowerGlidePathAnglePath;
     VectorDrawableCompat.VFullPath levelCruiseAnglePath;
@@ -148,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
     TextView arrowSensorAngleTextView;
     MediaPlayer player;
     Button airfoilIndicatorButton;
+    ImageButton volumeOnButton;
+    ImageButton volumeMuteButton;
+    boolean volumeOn = false;
 
     // Airfoil Indicator Layout
     RelativeLayout airfoilIndicatorLayout;
@@ -159,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView airfoilGlidePathImageView;
     ImageView airfoilWarningImageView;
     ImageView airfoilDangerImageView;
+    ImageView airfoilWarningFlapsImageView;
+    ImageView airfoilDangerFlapsImageView;
     ImageView airfoilNegativeAngleImageView;
     ImageView airfoilTSNeedle;
     ImageView airfoilTSBall;
@@ -207,6 +220,9 @@ public class MainActivity extends AppCompatActivity {
     private double glidePathAngleValue;
     private double warningAngleValue;
     private double dangerAngleValue;
+    private double warningAngleFlapsValue;
+    private double dangerAngleFlapsValue;
+
 
     long lastMillis = 0;
     float lastAngle;
@@ -361,8 +377,9 @@ public class MainActivity extends AppCompatActivity {
         // Instantiate the buttons on the AircraftLayout section
         levelFlightUpdateButton = findViewById(R.id.levelFlightUpdateButton);
         descentAngleUpdateButton = findViewById(R.id.descentAngleUpdateButton);
-        warningAngleUpdateButton = findViewById(R.id.warningAngleUpdateButton);
+//        warningAngleUpdateButton = findViewById(R.id.warningAngleUpdateButton);
         dangerAngleUpdateButton = findViewById(R.id.dangerAngleUpdateButton);
+        dangerAngleFlapsUpdateButton = findViewById(R.id.dangerAngleFlapsUpdateButton);
         turnRateOffsetUpdateButton = findViewById(R.id.turnRateOffsetUpdateButton);
 //        slipSkidOffsetUpdateButton = findViewById(R.id.slipSkidOffsetUpdateButton);
 
@@ -374,8 +391,11 @@ public class MainActivity extends AppCompatActivity {
         currentSlipSkid = findViewById(R.id.currentSlipSkid);
         levelFlight = findViewById(R.id.levelFlight);
         descentAngle = findViewById(R.id.descentAngle);
-        warningAngle = findViewById(R.id.warningAngle);
+//        warningAngle = findViewById(R.id.warningAngle);
         dangerAngle = findViewById(R.id.dangerAngle);
+
+        dangerAngleFlaps = findViewById(R.id.dangerAngleFlaps);
+
         turnRateOffset = findViewById(R.id.turnRateOffset);
         ballReadingMultiplier = findViewById(R.id.ballReadingMultiplier);
         addNewAircraftId = findViewById(R.id.addNewAircraftId);
@@ -392,14 +412,16 @@ public class MainActivity extends AppCompatActivity {
                     boolean checked = editAircraftSwitch.isChecked();
                     levelFlight.setEnabled(checked);
                     descentAngle.setEnabled(checked);
-                    warningAngle.setEnabled(checked);
+                    //warningAngle.setEnabled(checked);
                     dangerAngle.setEnabled(checked);
+                    dangerAngleFlaps.setEnabled(checked);
                     turnRateOffset.setEnabled(checked);
                     ballReadingMultiplier.setEnabled(checked);
                     levelFlightUpdateButton.setEnabled(checked);
                     descentAngleUpdateButton.setEnabled(checked);
-                    warningAngleUpdateButton.setEnabled(checked);
+//                    warningAngleUpdateButton.setEnabled(checked);
                     dangerAngleUpdateButton.setEnabled(checked);
+                    dangerAngleFlapsUpdateButton.setEnabled(checked);
                     turnRateOffsetUpdateButton.setEnabled(checked);
 
 //                    slipSkidOffsetUpdateButton.setEnabled(checked);
@@ -483,27 +505,38 @@ public class MainActivity extends AppCompatActivity {
         descentAngleUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double currentAngleReading = Double.parseDouble(currentAngle.getText().toString());
-                double levelFlightReading = Double.parseDouble(levelFlight.getText().toString());
-                descentAngle.setText( String.valueOf(currentAngleReading - levelFlightReading) );
+                double currentAngleReading = new BigDecimal(currentAngle.getText().toString()).setScale(2, RoundingMode.HALF_UP).doubleValue(); // Double.parseDouble(currentAngle.getText().toString());
+                double levelFlightReading = new BigDecimal(levelFlight.getText().toString()).setScale(2, RoundingMode.HALF_UP).doubleValue();  //Double.parseDouble(levelFlight.getText().toString());
+//                double currentAngleReading = roundValue(Double.parseDouble(currentAngle.getText().toString()), 2);
+//                double levelFlightReading = roundValue(Double.parseDouble(levelFlight.getText().toString()), 2);
+                descentAngle.setText( String.valueOf( roundValue( currentAngleReading - levelFlightReading, 2)));
             }
         });
 
-        warningAngleUpdateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double currentAngleReading = Double.parseDouble(currentAngle.getText().toString());
-                double levelFlightReading = Double.parseDouble(levelFlight.getText().toString());
-                warningAngle.setText( String.valueOf(currentAngleReading - levelFlightReading) );
-            }
-        });
+//        warningAngleUpdateButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                double currentAngleReading = Double.parseDouble(currentAngle.getText().toString());
+//                double levelFlightReading = Double.parseDouble(levelFlight.getText().toString());
+//                warningAngle.setText( String.valueOf(currentAngleReading - levelFlightReading) );
+//            }
+//        });
 
         dangerAngleUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 double currentAngleReading = Double.parseDouble(currentAngle.getText().toString());
                 double levelFlightReading = Double.parseDouble(levelFlight.getText().toString());
-                dangerAngle.setText(String.valueOf(currentAngleReading - levelFlightReading));
+                dangerAngle.setText(String.valueOf(roundValue( currentAngleReading - levelFlightReading, 2)));
+            }
+        });
+
+        dangerAngleFlapsUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double currentAngleReading = Double.parseDouble(currentAngle.getText().toString());
+                double levelFlightReading = Double.parseDouble(levelFlight.getText().toString());
+                dangerAngleFlaps.setText(String.valueOf(roundValue( currentAngleReading - levelFlightReading,2)));
             }
         });
 
@@ -537,6 +570,8 @@ public class MainActivity extends AppCompatActivity {
         VectorChildFinder vector        = new VectorChildFinder(this, R.drawable.ic_indicatorvector, imageView);
         dangerAnglePath                 = vector.findPathByName("DangerAngle");
         warningAnglePath                = vector.findPathByName("WarningAngle");
+        dangerAngleFlapsPath            = vector.findPathByName("DangerAnglePath");
+        warningAngleFlapsPath           = vector.findPathByName("WarningAnglePath");
         upperGlidePathAnglePath         = vector.findPathByName("UpperGlidePathAngle");
         lowerGlidePathAnglePath         = vector.findPathByName("LowerGlidePathAngle");
         levelCruiseAnglePath            = vector.findPathByName("LevelCruiseAngle");
@@ -545,10 +580,35 @@ public class MainActivity extends AppCompatActivity {
         arrowSensorAngleTextView        = findViewById(R.id.arrowSensorAngleTextView);
 
         airfoilIndicatorButton          = findViewById(R.id.airfoilIndicatorButton);
+
+        volumeOnButton                  = findViewById(R.id.volumeOnButton);
+        volumeMuteButton                = findViewById(R.id.volumeMuteButton);
+        toggleVolume();
+
         airfoilIndicatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showAirfoilIndicatorLayout();
+            }
+        });
+
+        volumeOnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleVolume();
+//                volumeMuteButton.setVisibility(View.VISIBLE);
+//                volumeOnButton.setVisibility(View.INVISIBLE);
+//                volumeOn = false;
+            }
+        });
+
+        volumeMuteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleVolume();
+//                volumeOnButton.setVisibility(View.VISIBLE);
+//                volumeMuteButton.setVisibility(View.INVISIBLE);
+
             }
         });
 
@@ -567,6 +627,10 @@ public class MainActivity extends AppCompatActivity {
         airfoilLevelFlightImageView         = findViewById(R.id.airfoilLevelFlightImageView);
         airfoilWarningImageView             = findViewById(R.id.airfoilWarningImageView);
         airfoilDangerImageView              = findViewById(R.id.airfoilDangerImageView);
+
+        airfoilWarningFlapsImageView        = findViewById(R.id.airfoilWarningFlapsImageView);
+        airfoilDangerFlapsImageView         = findViewById(R.id.airfoilDangerFlapsImageView);
+
         airfoilGlidePathImageView           = findViewById(R.id.airfoilGlidePathImageView);
         airfoilNegativeAngleImageView       = findViewById(R.id.airfoilNegativeAngleImageView);
         airfoilTSNeedle                     = findViewById(R.id.TS_Needle);
@@ -610,12 +674,17 @@ public class MainActivity extends AppCompatActivity {
             String aircraftIdValue = selectAircraftSpinner.getSelectedItem().toString();
             double levelAngleValue = Double.parseDouble(levelFlight.getText().toString());
             double descentAngleValue = Double.parseDouble(descentAngle.getText().toString());
-            double warningAngleValue = Double.parseDouble(warningAngle.getText().toString());
             double dangerAngleValue = Double.parseDouble(dangerAngle.getText().toString());
+//            double warningAngleValue = dangerAngleValue - (dangerAngleValue * .2); //Double.parseDouble(warningAngle.getText().toString());
+            double dangerAngleFlapsValue = Double.parseDouble(dangerAngleFlaps.getText().toString());
+//            double dangerAngleFlapsValue = Double.parseDouble(warningAngle.getText().toString());
+//            double warningAngleFlapsValue = dangerAngleFlapsValue - (dangerAngleFlapsValue * .2);
+
             double turnRate         = Double.parseDouble(turnRateOffset.getText().toString());
             double ballReading      = Double.parseDouble(ballReadingMultiplier.getText().toString());
 
-            AircraftModel aircraftModel = new AircraftModel(aircraftIdValue, levelAngleValue, descentAngleValue, warningAngleValue, dangerAngleValue, turnRate, ballReading);
+//            AircraftModel aircraftModel = new AircraftModel(aircraftIdValue, levelAngleValue, descentAngleValue, warningAngleValue, dangerAngleValue, turnRate, ballReading);
+            AircraftModel aircraftModel = new AircraftModel(aircraftIdValue, levelAngleValue, descentAngleValue, dangerAngleValue, dangerAngleFlapsValue, turnRate, ballReading);
 
             sqLiteOpenHelper.updateAirplane(aircraftModel);
         } else {
@@ -654,8 +723,9 @@ public class MainActivity extends AppCompatActivity {
 
         levelFlight.setText(String.valueOf(aircraftModel.getLevelCruiseAngle()));
         descentAngle.setText(String.valueOf(aircraftModel.getDescentAngle()));
-        warningAngle.setText(String.valueOf(aircraftModel.getWarningAngle()));
+//        warningAngle.setText(String.valueOf(aircraftModel.getWarningAngle()));
         dangerAngle.setText(String.valueOf(aircraftModel.getDangerAngle()));
+        dangerAngleFlaps.setText(String.valueOf(aircraftModel.getDangerAngleFlaps()));
         turnRateOffset.setText(String.valueOf(aircraftModel.getTurnRate()));
         ballReadingMultiplier.setText(String.valueOf(aircraftModel.getBallReadingMultiplier()));
 
@@ -737,8 +807,16 @@ public class MainActivity extends AppCompatActivity {
 
                 // grab all of the values set on the Aircraft tab
                 glidePathAngleValue     = isNumeric(descentAngle.getText().toString())  ? Double.parseDouble(descentAngle.getText().toString()) : 0.0;
-                warningAngleValue       = isNumeric(warningAngle.getText().toString())  ? Double.parseDouble(warningAngle.getText().toString()) : 0.0;
+
+                //                warningAngleValue       = isNumeric(warningAngle.getText().toString())  ? Double.parseDouble(warningAngle.getText().toString()) : 0.0;
+
                 dangerAngleValue        = isNumeric(dangerAngle.getText().toString())   ? Double.parseDouble(dangerAngle.getText().toString()) : 0.0;
+                warningAngleValue       = dangerAngleValue < 0.0 ? dangerAngleValue - (dangerAngleValue * .2): 0.0;
+
+                dangerAngleFlapsValue   = isNumeric(dangerAngleFlaps.getText().toString()) ? Double.parseDouble(dangerAngleFlaps.getText().toString()) : 0.0;
+                warningAngleFlapsValue  = dangerAngleFlapsValue < 0.0 ? dangerAngleFlapsValue - (dangerAngleFlapsValue * .2) : 0.0;
+
+                warningAngleFlapsValue = warningAngleFlapsValue + 0;
 
             } else {
                 Toast.makeText(getApplicationContext(), "No aircraft selected", Toast.LENGTH_LONG).show();
@@ -747,6 +825,18 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), "No sensor connected.", Toast.LENGTH_LONG).show();
             showSensorLayout();
+        }
+    }
+
+    private void toggleVolume() {
+        if (volumeOn) {
+            volumeMuteButton.setVisibility(View.VISIBLE);
+            volumeOnButton.setVisibility(View.INVISIBLE);
+            volumeOn = false;
+        } else {
+            volumeMuteButton.setVisibility(View.INVISIBLE);
+            volumeOnButton.setVisibility(View.VISIBLE);
+            volumeOn = true;
         }
     }
 
@@ -947,12 +1037,12 @@ public class MainActivity extends AppCompatActivity {
 
                 float turnRateReading = Float.parseFloat(readings[1]);
                 if (Float.isNaN(turnRateReading)) {
-                    turnRateReading = 0.0f;
+                    turnRateReading = 0.00f;
                 }
 
                 float slipSkidReading = Float.parseFloat(readings[2]);
                 if (Float.isNaN(slipSkidReading)) {
-                    slipSkidReading = 0.0f;
+                    slipSkidReading = 0.00f;
                 }
 
                 String strAngleReading = df.format(angleReading);
@@ -1165,7 +1255,7 @@ public class MainActivity extends AppCompatActivity {
                     // check to see if the calibrated reading is within 1 degree of the
                     // configured danger angle. If so, play the audible warning. If not. Stop
                     // the audible warning
-                    if (calibratedReading <= (dangerAngleValue) + 1.0) {
+                    if (calibratedReading <= (dangerAngleValue) + 1.0 && volumeOn) {
 //                        System.out.println(
 //                                String.format(
 //                                        "Sound playing. calibratedReading: %s | dangerAngleValue: %s",
@@ -1235,6 +1325,23 @@ public class MainActivity extends AppCompatActivity {
                         rotateAirfoilDangerArc.setDuration(1000);
                         rotateAirfoilDangerArc.setRepeatCount(Animation.INFINITE);
                         airfoilDangerImageView.startAnimation(rotateAirfoilDangerArc);
+
+                        // *** FLAPS *** Warning Angle Arc (Yellow)
+                        RotateAnimation rotateAirfoilWarningFlapsArc = new RotateAnimation(
+                                -(float)((warningAngleFlapsValue) * ANGLE_MULTIPLIER), -(float)((warningAngleFlapsValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                        );
+                        rotateAirfoilWarningFlapsArc.setDuration(1000);
+                        rotateAirfoilWarningFlapsArc.setRepeatCount(Animation.INFINITE);
+                        airfoilWarningFlapsImageView.startAnimation(rotateAirfoilWarningFlapsArc);
+
+                        // *** FLAPS *** Danger Angle Arc (Red)
+                        RotateAnimation rotateAirfoilDangerFlapsArc = new RotateAnimation(
+                                -(float)((dangerAngleFlapsValue) * ANGLE_MULTIPLIER), -(float)((dangerAngleFlapsValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                        );
+                        rotateAirfoilDangerFlapsArc.setDuration(1000);
+                        rotateAirfoilDangerFlapsArc.setRepeatCount(Animation.INFINITE);
+                        airfoilDangerFlapsImageView.startAnimation(rotateAirfoilDangerFlapsArc);
+
                     }
                 });
             }
@@ -1248,6 +1355,8 @@ public class MainActivity extends AppCompatActivity {
                 player = null;
             }
         }
+
+
 
 
         // this will get called when a bluetooth device connects or disconnects
@@ -1342,5 +1451,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
+    public static double roundValue (double value, int places) {
+        double scale = Math.pow(10, places);
+        return Math.round(value * scale) / scale;
+    }
 
 }
