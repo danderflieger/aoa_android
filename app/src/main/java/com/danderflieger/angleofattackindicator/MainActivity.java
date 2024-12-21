@@ -92,6 +92,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     private final static int RECEIVE_INTERVAL = 180;
+    private final double warningInterpolationMultiplier = 0.3;
 
     RelativeLayout disclaimerLayout;
     ScrollView disclaimerScrollView;
@@ -159,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton volumeOnButton;
     ImageButton volumeMuteButton;
     boolean volumeOn = false;
+
 
     // Airfoil Indicator Layout
     RelativeLayout airfoilIndicatorLayout;
@@ -675,11 +677,7 @@ public class MainActivity extends AppCompatActivity {
             double levelAngleValue = Double.parseDouble(levelFlight.getText().toString());
             double descentAngleValue = Double.parseDouble(descentAngle.getText().toString());
             double dangerAngleValue = Double.parseDouble(dangerAngle.getText().toString());
-//            double warningAngleValue = dangerAngleValue - (dangerAngleValue * .2); //Double.parseDouble(warningAngle.getText().toString());
             double dangerAngleFlapsValue = Double.parseDouble(dangerAngleFlaps.getText().toString());
-//            double dangerAngleFlapsValue = Double.parseDouble(warningAngle.getText().toString());
-//            double warningAngleFlapsValue = dangerAngleFlapsValue - (dangerAngleFlapsValue * .2);
-
             double turnRate         = Double.parseDouble(turnRateOffset.getText().toString());
             double ballReading      = Double.parseDouble(ballReadingMultiplier.getText().toString());
 
@@ -811,10 +809,10 @@ public class MainActivity extends AppCompatActivity {
                 //                warningAngleValue       = isNumeric(warningAngle.getText().toString())  ? Double.parseDouble(warningAngle.getText().toString()) : 0.0;
 
                 dangerAngleValue        = isNumeric(dangerAngle.getText().toString())   ? Double.parseDouble(dangerAngle.getText().toString()) : 0.0;
-                warningAngleValue       = dangerAngleValue < 0.0 ? dangerAngleValue - (dangerAngleValue * .2): 0.0;
+                warningAngleValue       = dangerAngleValue < 0.0 ? dangerAngleValue - (dangerAngleValue * warningInterpolationMultiplier): 0.0;
 
                 dangerAngleFlapsValue   = isNumeric(dangerAngleFlaps.getText().toString()) ? Double.parseDouble(dangerAngleFlaps.getText().toString()) : 0.0;
-                warningAngleFlapsValue  = dangerAngleFlapsValue < 0.0 ? dangerAngleFlapsValue - (dangerAngleFlapsValue * .2) : 0.0;
+                warningAngleFlapsValue  = dangerAngleFlapsValue < 0.0 ? dangerAngleFlapsValue - (dangerAngleFlapsValue * warningInterpolationMultiplier) : 0.0;
 
                 warningAngleFlapsValue = warningAngleFlapsValue + 0;
 

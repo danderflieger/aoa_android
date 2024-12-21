@@ -117,7 +117,7 @@
         android:layout_above="@+id/ButtonView"
         android:layout_marginBottom="0dp"
         android:background="@color/dark_yellow"
-        android:visibility="invisible">
+        android:visibility="visible">
 
 
         <TextView
@@ -443,7 +443,7 @@
                     android:layout_toRightOf="@+id/ballReadingMultiplierCaption"
                     android:enabled="false"
                     android:inputType="numberDecimal|numberSigned"
-                    android:text="0"
+                    android:text="300"
                     android:textAlignment="center" />
             </RelativeLayout>
         </ScrollView>
@@ -525,7 +525,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/ButtonView"
         android:background="#444"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/airfoilPlacardTextView"
