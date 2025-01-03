@@ -135,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
     EditText descentAngle;
     EditText warningAngle;
     EditText dangerAngle;
+    Switch autoCalibrateDangerAngleSwitch;
+    Switch autoCalibrateDangerAngleFlapsSwitch;
     EditText warningAngleFlaps;
     EditText dangerAngleFlaps;
     EditText turnRateOffset;
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Indicator Layout
-    RelativeLayout arrowIndicatorLayout;
+//    RelativeLayout arrowIndicatorLayout;
     ImageView imageView;
     VectorDrawableCompat.VFullPath dangerAnglePath;
     VectorDrawableCompat.VFullPath warningAnglePath;
@@ -225,6 +227,13 @@ public class MainActivity extends AppCompatActivity {
     private double warningAngleFlapsValue;
     private double dangerAngleFlapsValue;
 
+//    private ArrayList<Float> anglesList;
+//    private ArrayList<Float> turnRatesList;
+//
+//    // this is a value to decide how many readings to use for smoothing - it will average this many
+//    // readings before showing the reading on the screen.
+//    private int smoothReadingCount = 2;
+
 
     long lastMillis = 0;
     float lastAngle;
@@ -235,6 +244,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        anglesList = new ArrayList<>();
+//        turnRatesList = new ArrayList<>();
 
         // Verify that the app has permission to location services on the device - Bluetooth
         //  requires it for some odd reason
@@ -331,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //showIndicatorLayout();
+                editAircraftSwitch.setChecked(false);
                 showAirfoilIndicatorLayout();
             }
         });
@@ -381,7 +394,9 @@ public class MainActivity extends AppCompatActivity {
         descentAngleUpdateButton = findViewById(R.id.descentAngleUpdateButton);
 //        warningAngleUpdateButton = findViewById(R.id.warningAngleUpdateButton);
         dangerAngleUpdateButton = findViewById(R.id.dangerAngleUpdateButton);
+        autoCalibrateDangerAngleSwitch = findViewById(R.id.autoCalibrateDangerAngleSwitch);
         dangerAngleFlapsUpdateButton = findViewById(R.id.dangerAngleFlapsUpdateButton);
+        autoCalibrateDangerAngleFlapsSwitch = findViewById(R.id.autoCalibrateDangerAngleFlapsSwitch);
         turnRateOffsetUpdateButton = findViewById(R.id.turnRateOffsetUpdateButton);
 //        slipSkidOffsetUpdateButton = findViewById(R.id.slipSkidOffsetUpdateButton);
 
@@ -408,36 +423,68 @@ public class MainActivity extends AppCompatActivity {
         editAircraftSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                autoCalibrateDangerAngleSwitch.setChecked(false);
+                autoCalibrateDangerAngleFlapsSwitch.setChecked(false);
 
-                if (selectAircraftSpinner.getChildCount() > 0) {
+                enableAndDisableAircraftObjects();
+//                if (selectAircraftSpinner.getChildCount() > 0) {
+//
+//                    boolean checked = editAircraftSwitch.isChecked();
+//                    levelFlight.setEnabled(checked);
+//                    descentAngle.setEnabled(checked);
+//                    //warningAngle.setEnabled(checked);
+//                    dangerAngle.setEnabled(checked);
+//                    dangerAngleFlaps.setEnabled(checked);
+//                    turnRateOffset.setEnabled(checked);
+//                    ballReadingMultiplier.setEnabled(checked);
+//                    levelFlightUpdateButton.setEnabled(checked);
+//                    descentAngleUpdateButton.setEnabled(checked);
+////                    warningAngleUpdateButton.setEnabled(checked);
+//
+//                    autoCalibrateDangerAngleSwitch.setEnabled(checked);
+//                    autoCalibrateDangerAngleFlapsSwitch.setEnabled(checked);
+//
+//                    if (autoCalibrateDangerAngleSwitch.isEnabled() && !autoCalibrateDangerAngleSwitch.isChecked()) {
+//                        dangerAngleUpdateButton.setEnabled(true);
+//                    } else {
+//                        dangerAngleFlapsUpdateButton.setEnabled(checked);
+//                    }
+//
+//                    if (autoCalibrateDangerAngleFlapsSwitch.isEnabled() && !autoCalibrateDangerAngleFlapsSwitch.isChecked()) {
+//                        dangerAngleFlapsUpdateButton.setEnabled(true);
+//                    } else {
+//                        dangerAngleFlapsUpdateButton.setEnabled(checked);
+//                    }
+////                    dangerAngleFlapsUpdateButton.setEnabled(checked);
+//
+//                    turnRateOffsetUpdateButton.setEnabled(checked);
+//
+////                    slipSkidOffsetUpdateButton.setEnabled(checked);
+//                    deleteAircraftButton.setEnabled(checked);
+//
+//                    // save values when deselecting the switch
+//                    if (!checked) {
+//                        updateAircraftValues();
+//                    }
+//
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "No aircraft have been added. Add one at the bottom of this page.", Toast.LENGTH_LONG).show();
+//                    editAircraftSwitch.setChecked(false);
+//                }
+            }
+        });
 
-                    boolean checked = editAircraftSwitch.isChecked();
-                    levelFlight.setEnabled(checked);
-                    descentAngle.setEnabled(checked);
-                    //warningAngle.setEnabled(checked);
-                    dangerAngle.setEnabled(checked);
-                    dangerAngleFlaps.setEnabled(checked);
-                    turnRateOffset.setEnabled(checked);
-                    ballReadingMultiplier.setEnabled(checked);
-                    levelFlightUpdateButton.setEnabled(checked);
-                    descentAngleUpdateButton.setEnabled(checked);
-//                    warningAngleUpdateButton.setEnabled(checked);
-                    dangerAngleUpdateButton.setEnabled(checked);
-                    dangerAngleFlapsUpdateButton.setEnabled(checked);
-                    turnRateOffsetUpdateButton.setEnabled(checked);
+        autoCalibrateDangerAngleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                enableAndDisableAircraftObjects();
+            }
+        });
 
-//                    slipSkidOffsetUpdateButton.setEnabled(checked);
-                    deleteAircraftButton.setEnabled(checked);
-
-                    // save values when deselecting the switch
-                    if (!checked) {
-                        updateAircraftValues();
-                    }
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "No aircraft have been added. Add one at the bottom of this page.", Toast.LENGTH_LONG).show();
-                    editAircraftSwitch.setChecked(false);
-                }
+        autoCalibrateDangerAngleFlapsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                enableAndDisableAircraftObjects();
             }
         });
 
@@ -566,33 +613,36 @@ public class MainActivity extends AppCompatActivity {
 
         // Instantiate the arrowIndicatorLayout -
         // This is one of the two options for the AoA visual indicator
-        arrowIndicatorLayout = findViewById(R.id.arrowIndicatorLayout);
+//        arrowIndicatorLayout = findViewById(R.id.arrowIndicatorLayout);
 
-        imageView = findViewById(R.id.indicator);
-        VectorChildFinder vector        = new VectorChildFinder(this, R.drawable.ic_indicatorvector, imageView);
-        dangerAnglePath                 = vector.findPathByName("DangerAngle");
-        warningAnglePath                = vector.findPathByName("WarningAngle");
-        dangerAngleFlapsPath            = vector.findPathByName("DangerAnglePath");
-        warningAngleFlapsPath           = vector.findPathByName("WarningAnglePath");
-        upperGlidePathAnglePath         = vector.findPathByName("UpperGlidePathAngle");
-        lowerGlidePathAnglePath         = vector.findPathByName("LowerGlidePathAngle");
-        levelCruiseAnglePath            = vector.findPathByName("LevelCruiseAngle");
-        negativeAnglePath               = vector.findPathByName("NegativeAngle");
-        arrowCalibratedAngleTextView    = findViewById(R.id.arrowCalibratedAngleTextView);
-        arrowSensorAngleTextView        = findViewById(R.id.arrowSensorAngleTextView);
+//        imageView = findViewById(R.id.indicator);
+//        VectorChildFinder vector        = new VectorChildFinder(this, R.drawable.ic_indicatorvector, imageView);
+//        dangerAnglePath                 = vector.findPathByName("DangerAngle");
+//        warningAnglePath                = vector.findPathByName("WarningAngle");
+//        dangerAngleFlapsPath            = vector.findPathByName("DangerAnglePath");
+//        warningAngleFlapsPath           = vector.findPathByName("WarningAnglePath");
+//        upperGlidePathAnglePath         = vector.findPathByName("UpperGlidePathAngle");
+//        lowerGlidePathAnglePath         = vector.findPathByName("LowerGlidePathAngle");
+//        levelCruiseAnglePath            = vector.findPathByName("LevelCruiseAngle");
+//        negativeAnglePath               = vector.findPathByName("NegativeAngle");
+//        arrowCalibratedAngleTextView    = findViewById(R.id.arrowCalibratedAngleTextView);
+//        arrowSensorAngleTextView        = findViewById(R.id.arrowSensorAngleTextView);
+//
+//        airfoilIndicatorButton          = findViewById(R.id.airfoilIndicatorButton);
+//
 
-        airfoilIndicatorButton          = findViewById(R.id.airfoilIndicatorButton);
+//
+//        airfoilIndicatorButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showAirfoilIndicatorLayout();
+//            }
+//        });
+
 
         volumeOnButton                  = findViewById(R.id.volumeOnButton);
         volumeMuteButton                = findViewById(R.id.volumeMuteButton);
         toggleVolume();
-
-        airfoilIndicatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAirfoilIndicatorLayout();
-            }
-        });
 
         volumeOnButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -646,12 +696,12 @@ public class MainActivity extends AppCompatActivity {
 
         arrowIndicatorButton                = findViewById(R.id.arrowIndicatorButton);
 
-        arrowIndicatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showArrowIndicatorLayout();
-            }
-        });
+//        arrowIndicatorButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showArrowIndicatorLayout();
+//            }
+//        });
 
         // Instantiate Bluetooth Stuff
         btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -667,6 +717,47 @@ public class MainActivity extends AppCompatActivity {
         showDisclaimer();
 
 
+    }
+
+    private void enableAndDisableAircraftObjects() {
+        if (selectAircraftSpinner.getChildCount() > 0) {
+
+            boolean checked = editAircraftSwitch.isChecked();
+            levelFlight.setEnabled(checked);
+            descentAngle.setEnabled(checked);
+            //warningAngle.setEnabled(checked);
+            dangerAngle.setEnabled(checked);
+            dangerAngleFlaps.setEnabled(checked);
+            turnRateOffset.setEnabled(checked);
+            ballReadingMultiplier.setEnabled(checked);
+            levelFlightUpdateButton.setEnabled(checked);
+            descentAngleUpdateButton.setEnabled(checked);
+//                    warningAngleUpdateButton.setEnabled(checked);
+
+            autoCalibrateDangerAngleSwitch.setEnabled(checked);
+            autoCalibrateDangerAngleFlapsSwitch.setEnabled(checked);
+
+            dangerAngleUpdateButton.setEnabled(checked);
+            dangerAngleFlapsUpdateButton.setEnabled(checked);
+
+            toggleDangerAngleUseCurrentButton();
+            toggleDangerAngleFlapsUseCurrentButton();
+
+
+            turnRateOffsetUpdateButton.setEnabled(checked);
+
+//                    slipSkidOffsetUpdateButton.setEnabled(checked);
+            deleteAircraftButton.setEnabled(checked);
+
+            // save values when deselecting the switch
+            if (!checked) {
+                updateAircraftValues();
+            }
+
+        } else {
+            Toast.makeText(getApplicationContext(), "No aircraft have been added. Add one at the bottom of this page.", Toast.LENGTH_LONG).show();
+            editAircraftSwitch.setChecked(false);
+        }
     }
 
     private void updateAircraftValues() {
@@ -737,7 +828,7 @@ public class MainActivity extends AppCompatActivity {
         disclaimerLayout.setVisibility(View.VISIBLE);
         sensorLayout.setVisibility(View.GONE);
         aircraftLayout.setVisibility(View.GONE);
-        arrowIndicatorLayout.setVisibility(View.GONE);
+//        arrowIndicatorLayout.setVisibility(View.GONE);
 
         int disclaimerTextViewHeight = disclaimerTextView.getHeight();
         int disclaimerScrollViewHeight = disclaimerScrollView.getHeight();
@@ -753,7 +844,7 @@ public class MainActivity extends AppCompatActivity {
         disclaimerLayout.setVisibility(View.GONE);
         sensorLayout.setVisibility(View.VISIBLE);
         aircraftLayout.setVisibility(View.GONE);
-        arrowIndicatorLayout.setVisibility(View.GONE);
+//        arrowIndicatorLayout.setVisibility(View.GONE);
         airfoilIndicatorLayout.setVisibility(View.GONE);
 
     }
@@ -763,35 +854,35 @@ public class MainActivity extends AppCompatActivity {
         disclaimerLayout.setVisibility(View.GONE);
         sensorLayout.setVisibility(View.GONE);
         aircraftLayout.setVisibility(View.VISIBLE);
-        arrowIndicatorLayout.setVisibility(View.GONE);
+//        arrowIndicatorLayout.setVisibility(View.GONE);
         airfoilIndicatorLayout.setVisibility(View.GONE);
 
     }
 
-    private void showArrowIndicatorLayout() {
-        if (btConnected) {
-
-            if (selectAircraftSpinner.getCount() > 0){
-
-                disclaimerLayout.setVisibility(View.GONE);
-                sensorLayout.setVisibility(View.GONE);
-                aircraftLayout.setVisibility(View.GONE);
-                arrowIndicatorLayout.setVisibility(View.VISIBLE);
-                airfoilIndicatorLayout.setVisibility(View.GONE);
-
-            } else {
-
-                Toast.makeText(getApplicationContext(), "No aircraft selected", Toast.LENGTH_LONG).show();
-                showAircraftLayout();
-
-            }
-        } else {
-
-            Toast.makeText(getApplicationContext(), "No sensor connected.", Toast.LENGTH_LONG).show();
-            showSensorLayout();
-
-        }
-    }
+//    private void showArrowIndicatorLayout() {
+//        if (btConnected) {
+//
+//            if (selectAircraftSpinner.getCount() > 0){
+//
+//                disclaimerLayout.setVisibility(View.GONE);
+//                sensorLayout.setVisibility(View.GONE);
+//                aircraftLayout.setVisibility(View.GONE);
+//                arrowIndicatorLayout.setVisibility(View.VISIBLE);
+//                airfoilIndicatorLayout.setVisibility(View.GONE);
+//
+//            } else {
+//
+//                Toast.makeText(getApplicationContext(), "No aircraft selected", Toast.LENGTH_LONG).show();
+//                showAircraftLayout();
+//
+//            }
+//        } else {
+//
+//            Toast.makeText(getApplicationContext(), "No sensor connected.", Toast.LENGTH_LONG).show();
+//            showSensorLayout();
+//
+//        }
+//    }
 
     private void showAirfoilIndicatorLayout() {
         if (btConnected) {
@@ -799,7 +890,7 @@ public class MainActivity extends AppCompatActivity {
                 disclaimerLayout.setVisibility(View.GONE);
                 sensorLayout.setVisibility(View.GONE);
                 aircraftLayout.setVisibility(View.GONE);
-                arrowIndicatorLayout.setVisibility(View.GONE);
+//                arrowIndicatorLayout.setVisibility(View.GONE);
                 airfoilIndicatorLayout.setVisibility(View.VISIBLE);
 
 
@@ -823,6 +914,23 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), "No sensor connected.", Toast.LENGTH_LONG).show();
             showSensorLayout();
+        }
+    }
+
+    private void toggleDangerAngleUseCurrentButton() {
+
+        if (autoCalibrateDangerAngleSwitch.isEnabled() && !autoCalibrateDangerAngleSwitch.isChecked()) {
+            dangerAngleUpdateButton.setEnabled(true);
+        } else {
+            dangerAngleUpdateButton.setEnabled(false);
+        }
+    }
+
+    private void toggleDangerAngleFlapsUseCurrentButton() {
+        if (autoCalibrateDangerAngleFlapsSwitch.isEnabled() && !autoCalibrateDangerAngleFlapsSwitch.isChecked()) {
+            dangerAngleFlapsUpdateButton.setEnabled(true);
+        } else {
+            dangerAngleFlapsUpdateButton.setEnabled(false);
         }
     }
 
@@ -1004,7 +1112,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-
     // Device connect call back
     private final BluetoothGattCallback btleGattCallback = new BluetoothGattCallback() {
 
@@ -1035,7 +1142,7 @@ public class MainActivity extends AppCompatActivity {
 
                 float turnRateReading = Float.parseFloat(readings[1]);
                 if (Float.isNaN(turnRateReading)) {
-                    turnRateReading = 0.00f;
+                    turnRateReading = 0.0f;
                 }
 
                 float slipSkidReading = Float.parseFloat(readings[2]);
@@ -1069,65 +1176,81 @@ public class MainActivity extends AppCompatActivity {
                         currentTurnRate.setText(strTurnRateReading);
                         currentSlipSkid.setText(strSlipSkidReading);
 
+                        if(aircraftLayout.getVisibility() == View.VISIBLE) {
+                            if(autoCalibrateDangerAngleSwitch.isChecked()) {
+                                float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
+                                if (calibratedReading < Float.parseFloat(dangerAngle.getText().toString())) {
+                                    dangerAngle.setText(String.format("%.1f",calibratedReading));
+                                }
+                            }
+
+                            if(autoCalibrateDangerAngleFlapsSwitch.isChecked()) {
+                                float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
+                                if (calibratedReading < Float.parseFloat(dangerAngleFlaps.getText().toString())) {
+                                    dangerAngleFlaps.setText(String.format("%.1f",calibratedReading));
+                                }
+                            }
+                        }
+
                         // these two floats determine how opaque the backgrounds
                         // are on the arrow-type indicator - lightOn is fully opaque,
                         // lightOff is mostly transparent.
-                        float lightOn = 255f;
-                        float lightOff = 0.2f;
+//                        float lightOn = 255f;
+//                        float lightOff = 0.2f;
 
                         // Arrow Indicator Type
-                        if (arrowIndicatorLayout.getVisibility() == View.VISIBLE) {
-
-                            float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
-                            arrowSensorAngleTextView.setText(strAngleReading);
-                            arrowCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
-
-                            // Danger Angle
-                            if (calibratedReading <= dangerAngleValue + 1.0) {
-                                dangerAnglePath.setFillAlpha(lightOn);
-                            } else {
-                                dangerAnglePath.setFillAlpha(lightOff);
-                            }
-
-                            // Warning Angle
-                            if (calibratedReading <= warningAngleValue + 1 && calibratedReading >= dangerAngleValue) { //warningAngle && reading2 >= dangerAngle) {
-                                warningAnglePath.setFillAlpha(lightOn);
-                            } else {
-                                warningAnglePath.setFillAlpha(lightOff);
-                            }
-
-                            // Upper Glide Path Angle
-                            if (calibratedReading <= glidePathAngleValue + 1 && calibratedReading >= warningAngleValue) {
-                                upperGlidePathAnglePath.setFillAlpha(lightOn);
-                            } else {
-                                upperGlidePathAnglePath.setFillAlpha(lightOff);
-                            }
-
-                            // Lower Glide Path Angle
-                            if (calibratedReading <= -1 && calibratedReading >= glidePathAngleValue - 1) {
-                                lowerGlidePathAnglePath.setFillAlpha(lightOn);
-                            } else {
-                                lowerGlidePathAnglePath.setFillAlpha(lightOff);
-                            }
-
-                            // Level Cruise
-                            if (calibratedReading <= 2 && calibratedReading >= -2) {
-                                levelCruiseAnglePath.setFillAlpha(lightOn);
-                            } else {
-                                levelCruiseAnglePath.setFillAlpha(lightOff);
-                            }
-
-                            // Negative Angle
-                            if (calibratedReading >= 1) {
-                                negativeAnglePath.setFillAlpha(lightOn);
-                            } else {
-                                negativeAnglePath.setFillAlpha(lightOff);
-                            }
-
-                            imageView.invalidate();
-                            controlAudibleWarning(calibratedReading);
-
-                        }
+//                        if (arrowIndicatorLayout.getVisibility() == View.VISIBLE) {
+//
+//                            float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
+//                            arrowSensorAngleTextView.setText(strAngleReading);
+//                            arrowCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
+//
+//                            // Danger Angle
+//                            if (calibratedReading <= dangerAngleValue + 1.0) {
+//                                dangerAnglePath.setFillAlpha(lightOn);
+//                            } else {
+//                                dangerAnglePath.setFillAlpha(lightOff);
+//                            }
+//
+//                            // Warning Angle
+//                            if (calibratedReading <= warningAngleValue + 1 && calibratedReading >= dangerAngleValue) { //warningAngle && reading2 >= dangerAngle) {
+//                                warningAnglePath.setFillAlpha(lightOn);
+//                            } else {
+//                                warningAnglePath.setFillAlpha(lightOff);
+//                            }
+//
+//                            // Upper Glide Path Angle
+//                            if (calibratedReading <= glidePathAngleValue + 1 && calibratedReading >= warningAngleValue) {
+//                                upperGlidePathAnglePath.setFillAlpha(lightOn);
+//                            } else {
+//                                upperGlidePathAnglePath.setFillAlpha(lightOff);
+//                            }
+//
+//                            // Lower Glide Path Angle
+//                            if (calibratedReading <= -1 && calibratedReading >= glidePathAngleValue - 1) {
+//                                lowerGlidePathAnglePath.setFillAlpha(lightOn);
+//                            } else {
+//                                lowerGlidePathAnglePath.setFillAlpha(lightOff);
+//                            }
+//
+//                            // Level Cruise
+//                            if (calibratedReading <= 2 && calibratedReading >= -2) {
+//                                levelCruiseAnglePath.setFillAlpha(lightOn);
+//                            } else {
+//                                levelCruiseAnglePath.setFillAlpha(lightOff);
+//                            }
+//
+//                            // Negative Angle
+//                            if (calibratedReading >= 1) {
+//                                negativeAnglePath.setFillAlpha(lightOn);
+//                            } else {
+//                                negativeAnglePath.setFillAlpha(lightOff);
+//                            }
+//
+//                            imageView.invalidate();
+//                            controlAudibleWarning(calibratedReading);
+//
+//                        }
 
                         // Airfoil Indicator Type
                         if (airfoilIndicatorLayout.getVisibility() == View.VISIBLE) {
@@ -1142,12 +1265,18 @@ public class MainActivity extends AppCompatActivity {
                                 calibratedReading = 60;
                             }
 
+
+//                            calibratedReading = getSmoothAngle(calibratedReading);
+//                            calibratedTurnRateReading = getSmoothTurnRate(calibratedTurnRateReading);
+
                             airfoilSensorAngleTextView.setText(String.format("%.1f", finalAngleReading));
                             airfoilCalibratedAngleTextView.setText(String.format("%.1f", calibratedReading));
                             //airfoilTurnRateTextView.setText(String.format("%.1f", formattedTurnRateReading));
                             airfoilTurnRateTextView.setText(String.format("%.2f", calibratedTurnRateReading));
                             airfoilCalibratedTurnRateTextView.setText(String.format("%.2f", calibratedTurnRateReading));
                             airfoilCalibratedSlipSkidTextView.setText(String.format("%.2f", calibratedSlipSkidReading));
+
+
 
                             setAirfoilArcsPositions();
 
@@ -1237,6 +1366,8 @@ public class MainActivity extends AppCompatActivity {
                             slideSlipSkidBall.start();
 
 //                            }
+                        } else {
+                            stopPlayer();
                         }
                     }
                 });
@@ -1449,6 +1580,34 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
+//    public float getSmoothAngle(float reading) {
+//        anglesList.add(0, reading);
+//        if (anglesList.size()>smoothReadingCount) {
+//            anglesList.remove(smoothReadingCount);
+//        }
+//
+//        float returnValue = reading;
+//        for (float listValue : anglesList) {
+//            returnValue += listValue;
+//        }
+//        returnValue = returnValue / anglesList.size();
+//        return returnValue;
+//    }
+//
+//    public float getSmoothTurnRate(float reading) {
+//        anglesList.add(0, reading);
+//        if (turnRatesList.size()>smoothReadingCount) {
+//            turnRatesList.remove(smoothReadingCount);
+//        }
+//
+//        float returnValue = reading;
+//        for (float listValue : turnRatesList) {
+//            returnValue += listValue;
+//        }
+//        returnValue = returnValue / turnRatesList.size();
+//        return returnValue;
+//    }
 
     public static double roundValue (double value, int places) {
         double scale = Math.pow(10, places);

@@ -15,7 +15,7 @@
         android:layout_above="@+id/ButtonView"
         android:layout_marginBottom="0dp"
         android:background="@color/dark_blue"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <Button
             android:id="@+id/startScanningButton"
@@ -140,10 +140,10 @@
             android:layout_marginTop="0dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
-            android:backgroundTint="@color/dark_blue"
+            android:background="@color/darker_yellow"
             android:minHeight="48dp"
             android:spinnerMode="dropdown"
-            android:textAlignment="center"
+            android:textAlignment="textEnd"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Switch
@@ -317,13 +317,20 @@
 
 
                 <!-- Danger Angle Controls -->
+                <View
+                    android:id="@+id/dangerAngleControlsSeparator"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/light_gray"
+                    android:paddingTop="10dp"
+                    android:layout_below="@id/descentAngleUpdateButton" />
                 <TextView
                     android:id="@+id/dangerAngleCaption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/descentAngleUpdateButton"
+                    android:layout_below="@+id/dangerAngleControlsSeparator"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:text="Danger Angle"
                     android:textSize="16dp" />
 
@@ -339,6 +346,8 @@
                     android:text="0"
                     android:textAlignment="center" />
 
+
+
                 <Button
                     android:id="@+id/dangerAngleUpdateButton"
                     android:layout_width="100dp"
@@ -351,14 +360,34 @@
                     android:text="Use Current"
                     android:textSize="12dp" />
 
+                <Switch
+                    android:id="@+id/autoCalibrateDangerAngleSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_below="@id/dangerAngleUpdateButton"
+                    android:layout_alignParentStart="true"
+                    android:textAlignment="textStart"
+                    android:layout_marginStart="20dp"
+                    android:checked="false"
+                    android:enabled="false"
+                    android:text="Auto Calibrate (No Flaps)" />
+
                 <!-- Danger Angle Flaps Controls -->
+                <View
+                    android:id="@+id/dangerAngleFlapsControlsSeparator"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/light_gray"
+                    android:paddingTop="10dp"
+                    android:layout_below="@id/autoCalibrateDangerAngleSwitch" />
+
                 <TextView
                     android:id="@+id/dangerAngleFlapsCaption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/dangerAngleUpdateButton"
+                    android:layout_below="@+id/dangerAngleFlapsControlsSeparator"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:text="Danger Angle (Flaps)"
                     android:textSize="16dp" />
 
@@ -386,14 +415,34 @@
                     android:text="Use Current"
                     android:textSize="12dp" />
 
+                <Switch
+                    android:id="@+id/autoCalibrateDangerAngleFlapsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_below="@id/dangerAngleFlapsUpdateButton"
+                    android:layout_alignParentStart="true"
+                    android:textAlignment="textStart"
+                    android:layout_marginStart="20dp"
+                    android:checked="false"
+                    android:enabled="false"
+                    android:text="Auto Calibrate (With Flaps)" />
+
                 <!-- Turn Rate Offset Controls -->
+                <View
+                    android:id="@+id/dangerAngleFlapsControlsLowerSeparator"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/light_gray"
+                    android:paddingTop="10dp"
+                    android:layout_below="@id/autoCalibrateDangerAngleFlapsSwitch" />
+
                 <TextView
                     android:id="@+id/turnRateOffsetCaption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/dangerAngleFlapsUpdateButton"
+                    android:layout_below="@+id/dangerAngleFlapsControlsLowerSeparator"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:text="Turn Rate Offset"
                     android:textSize="16dp" />
 
@@ -525,7 +574,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/ButtonView"
         android:background="#444"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/airfoilPlacardTextView"
