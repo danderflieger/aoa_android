@@ -3,6 +3,8 @@ package com.danderflieger.angleofattackindicator;
 //import androidx.activity.result.ActivityResultCallback;
 //import androidx.activity.result.ActivityResultLauncher;
 //import androidx.activity.result.contract.ActivityResultContracts;
+
+import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.RequiresApi;
 //import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -124,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     Button dangerAngleUpdateButton;
     Button dangerAngleFlapsUpdateButton;
     Button turnRateOffsetUpdateButton;
-//    Button slipSkidOffsetUpdateButton;
+    //    Button slipSkidOffsetUpdateButton;
     Switch editAircraftSwitch;
     Spinner selectAircraftSpinner;
 
@@ -204,16 +206,16 @@ public class MainActivity extends AppCompatActivity {
 
     private GoogleApiClient client;
 
-    final String ANGLE_SERVICE_UUID_STRING              = "00000001-627e-47e5-a3fc-ddabd97aa966";
-    final String READING_CHARACTERISTIC_UUID_STRING     = "00000002-627E-47E5-A3FC-DDABD97AA966";
-//    final String ANGLE_CHARACTERISTIC1_UUID_STRING      = "00000002-627e-47e5-a3fc-ddabd97aa966";
+    final String ANGLE_SERVICE_UUID_STRING = "00000001-627e-47e5-a3fc-ddabd97aa966";
+    final String READING_CHARACTERISTIC_UUID_STRING = "00000002-627E-47E5-A3FC-DDABD97AA966";
+    //    final String ANGLE_CHARACTERISTIC1_UUID_STRING      = "00000002-627e-47e5-a3fc-ddabd97aa966";
 //    final String TURN_RATE_CHARACTERISTIC_UUID_STRING   = "00000003-627e-47e5-a3fc-ddabd97aa966";
 //    final String SLIP_SKID_CHARACTERISTIC_UUID_STRING   = "00000004-627e-47e5-a3fc-ddabd97aa966";
-    final String DESCRIPTOR_UUID_STRING                 = "00002902-0000-1000-8000-00805f9b34fb"; // This never changes!
+    final String DESCRIPTOR_UUID_STRING = "00002902-0000-1000-8000-00805f9b34fb"; // This never changes!
 
     private UUID ANGLE_SERVICE_UUID;
     private UUID READING_CHARACTERISTIC_UUID;
-//    private UUID ANGLE_CHARACTERISTIC1_UUID;
+    //    private UUID ANGLE_CHARACTERISTIC1_UUID;
 //    private UUID TURN_RATE_CHARACTERISTIC_UUID;
 //    private UUID SLIP_SKID_CHARACTERISTIC_UUID;
     private UUID DESCRIPTOR_UUID;
@@ -250,12 +252,32 @@ public class MainActivity extends AppCompatActivity {
 
         // Verify that the app has permission to location services on the device - Bluetooth
         //  requires it for some odd reason
-        if (ContextCompat.checkSelfPermission(
-                MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//        if (ContextCompat.checkSelfPermission(
+//                MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(MainActivity.this,
+//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//        }
+
+
+        // Check permissions for Android 12 (API 31) and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(new String[]{
+                        Manifest.permission.BLUETOOTH_SCAN,
+                        Manifest.permission.BLUETOOTH_CONNECT,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                }, 1);
+            }
+        } else {
+            // For Android 11 and below, just check Location
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
         }
+
 
 
         // Instantiate the ButtonsLayout and add ClickListeners
@@ -349,7 +371,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         // Instantiate the SensorLayout
         sensorLayout = findViewById(R.id.sensorLayout);
         peripheralTextView = (TextView) findViewById(R.id.peripheralTextView);
@@ -359,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Instantiate the SensorLayout buttons and add onClick listeners to each
         connectToDevice = (Button) findViewById(R.id.ConnectButton);
-        connectToDevice.setOnClickListener(new View.OnClickListener(){
+        connectToDevice.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 connectToDeviceSelected();
             }
@@ -373,14 +394,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         startScanningButton = (Button) findViewById(R.id.startScanningButton);
-        startScanningButton.setOnClickListener(new View.OnClickListener(){
+        startScanningButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startScanning();
             }
         });
 
         stopScanningButton = (Button) findViewById(R.id.stopScanningButton);
-        stopScanningButton.setOnClickListener(new View.OnClickListener(){
+        stopScanningButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 stopScanning();
             }
@@ -558,7 +579,7 @@ public class MainActivity extends AppCompatActivity {
                 double levelFlightReading = new BigDecimal(levelFlight.getText().toString()).setScale(2, RoundingMode.HALF_UP).doubleValue();  //Double.parseDouble(levelFlight.getText().toString());
 //                double currentAngleReading = roundValue(Double.parseDouble(currentAngle.getText().toString()), 2);
 //                double levelFlightReading = roundValue(Double.parseDouble(levelFlight.getText().toString()), 2);
-                descentAngle.setText( String.valueOf( roundValue( currentAngleReading - levelFlightReading, 2)));
+                descentAngle.setText(String.valueOf(roundValue(currentAngleReading - levelFlightReading, 2)));
             }
         });
 
@@ -576,7 +597,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 double currentAngleReading = Double.parseDouble(currentAngle.getText().toString());
                 double levelFlightReading = Double.parseDouble(levelFlight.getText().toString());
-                dangerAngle.setText(String.valueOf(roundValue( currentAngleReading - levelFlightReading, 2)));
+                dangerAngle.setText(String.valueOf(roundValue(currentAngleReading - levelFlightReading, 2)));
             }
         });
 
@@ -585,7 +606,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 double currentAngleReading = Double.parseDouble(currentAngle.getText().toString());
                 double levelFlightReading = Double.parseDouble(levelFlight.getText().toString());
-                dangerAngleFlaps.setText(String.valueOf(roundValue( currentAngleReading - levelFlightReading,2)));
+                dangerAngleFlaps.setText(String.valueOf(roundValue(currentAngleReading - levelFlightReading, 2)));
             }
         });
 
@@ -606,9 +627,9 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         // Instantiate the UUIDs
-        ANGLE_SERVICE_UUID              = UUID.fromString(ANGLE_SERVICE_UUID_STRING);
-        READING_CHARACTERISTIC_UUID     = UUID.fromString(READING_CHARACTERISTIC_UUID_STRING);
-        DESCRIPTOR_UUID                 = UUID.fromString(DESCRIPTOR_UUID_STRING);
+        ANGLE_SERVICE_UUID = UUID.fromString(ANGLE_SERVICE_UUID_STRING);
+        READING_CHARACTERISTIC_UUID = UUID.fromString(READING_CHARACTERISTIC_UUID_STRING);
+        DESCRIPTOR_UUID = UUID.fromString(DESCRIPTOR_UUID_STRING);
 
 
         // Instantiate the arrowIndicatorLayout -
@@ -640,8 +661,8 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 
-        volumeOnButton                  = findViewById(R.id.volumeOnButton);
-        volumeMuteButton                = findViewById(R.id.volumeMuteButton);
+        volumeOnButton = findViewById(R.id.volumeOnButton);
+        volumeMuteButton = findViewById(R.id.volumeMuteButton);
         toggleVolume();
 
         volumeOnButton.setOnClickListener(new View.OnClickListener() {
@@ -676,25 +697,25 @@ public class MainActivity extends AppCompatActivity {
         VectorChildFinder airfoilVector = new VectorChildFinder(this, R.drawable.ic_airfoil, airfoilImageView);
         airfoilPath = airfoilVector.findPathByName("airfoil");
 
-        airfoilLevelFlightImageView         = findViewById(R.id.airfoilLevelFlightImageView);
-        airfoilWarningImageView             = findViewById(R.id.airfoilWarningImageView);
-        airfoilDangerImageView              = findViewById(R.id.airfoilDangerImageView);
+        airfoilLevelFlightImageView = findViewById(R.id.airfoilLevelFlightImageView);
+        airfoilWarningImageView = findViewById(R.id.airfoilWarningImageView);
+        airfoilDangerImageView = findViewById(R.id.airfoilDangerImageView);
 
-        airfoilWarningFlapsImageView        = findViewById(R.id.airfoilWarningFlapsImageView);
-        airfoilDangerFlapsImageView         = findViewById(R.id.airfoilDangerFlapsImageView);
+        airfoilWarningFlapsImageView = findViewById(R.id.airfoilWarningFlapsImageView);
+        airfoilDangerFlapsImageView = findViewById(R.id.airfoilDangerFlapsImageView);
 
-        airfoilGlidePathImageView           = findViewById(R.id.airfoilGlidePathImageView);
-        airfoilNegativeAngleImageView       = findViewById(R.id.airfoilNegativeAngleImageView);
-        airfoilTSNeedle                     = findViewById(R.id.TS_Needle);
-        airfoilTSBall                       = findViewById(R.id.TS_Ball);
+        airfoilGlidePathImageView = findViewById(R.id.airfoilGlidePathImageView);
+        airfoilNegativeAngleImageView = findViewById(R.id.airfoilNegativeAngleImageView);
+        airfoilTSNeedle = findViewById(R.id.TS_Needle);
+        airfoilTSBall = findViewById(R.id.TS_Ball);
 
-        airfoilCalibratedAngleTextView      = findViewById(R.id.airfoilCalibratedAngleTextView);
-        airfoilSensorAngleTextView          = findViewById(R.id.airfoilSensorAngleTextView);
-        airfoilTurnRateTextView             = findViewById(R.id.airfoilSensorTurnRateTextView);
-        airfoilCalibratedTurnRateTextView   = findViewById(R.id.airfoilCalibratedTurnRateTextView);
-        airfoilCalibratedSlipSkidTextView   = findViewById(R.id.airfoilCalibratedSlipSkidTextView);
+        airfoilCalibratedAngleTextView = findViewById(R.id.airfoilCalibratedAngleTextView);
+        airfoilSensorAngleTextView = findViewById(R.id.airfoilSensorAngleTextView);
+        airfoilTurnRateTextView = findViewById(R.id.airfoilSensorTurnRateTextView);
+        airfoilCalibratedTurnRateTextView = findViewById(R.id.airfoilCalibratedTurnRateTextView);
+        airfoilCalibratedSlipSkidTextView = findViewById(R.id.airfoilCalibratedSlipSkidTextView);
 
-        arrowIndicatorButton                = findViewById(R.id.arrowIndicatorButton);
+        arrowIndicatorButton = findViewById(R.id.arrowIndicatorButton);
 
 //        arrowIndicatorButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -769,8 +790,8 @@ public class MainActivity extends AppCompatActivity {
             double descentAngleValue = Double.parseDouble(descentAngle.getText().toString());
             double dangerAngleValue = Double.parseDouble(dangerAngle.getText().toString());
             double dangerAngleFlapsValue = Double.parseDouble(dangerAngleFlaps.getText().toString());
-            double turnRate         = Double.parseDouble(turnRateOffset.getText().toString());
-            double ballReading      = Double.parseDouble(ballReadingMultiplier.getText().toString());
+            double turnRate = Double.parseDouble(turnRateOffset.getText().toString());
+            double ballReading = Double.parseDouble(ballReadingMultiplier.getText().toString());
 
 //            AircraftModel aircraftModel = new AircraftModel(aircraftIdValue, levelAngleValue, descentAngleValue, warningAngleValue, dangerAngleValue, turnRate, ballReading);
             AircraftModel aircraftModel = new AircraftModel(aircraftIdValue, levelAngleValue, descentAngleValue, dangerAngleValue, dangerAngleFlapsValue, turnRate, ballReading);
@@ -886,7 +907,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showAirfoilIndicatorLayout() {
         if (btConnected) {
-            if (selectAircraftSpinner.getCount() > 0){
+            if (selectAircraftSpinner.getCount() > 0) {
                 disclaimerLayout.setVisibility(View.GONE);
                 sensorLayout.setVisibility(View.GONE);
                 aircraftLayout.setVisibility(View.GONE);
@@ -895,15 +916,15 @@ public class MainActivity extends AppCompatActivity {
 
 
                 // grab all of the values set on the Aircraft tab
-                glidePathAngleValue     = isNumeric(descentAngle.getText().toString())  ? Double.parseDouble(descentAngle.getText().toString()) : 0.0;
+                glidePathAngleValue = isNumeric(descentAngle.getText().toString()) ? Double.parseDouble(descentAngle.getText().toString()) : 0.0;
 
                 //                warningAngleValue       = isNumeric(warningAngle.getText().toString())  ? Double.parseDouble(warningAngle.getText().toString()) : 0.0;
 
-                dangerAngleValue        = isNumeric(dangerAngle.getText().toString())   ? Double.parseDouble(dangerAngle.getText().toString()) : 0.0;
-                warningAngleValue       = dangerAngleValue < 0.0 ? dangerAngleValue - (dangerAngleValue * warningInterpolationMultiplier): 0.0;
+                dangerAngleValue = isNumeric(dangerAngle.getText().toString()) ? Double.parseDouble(dangerAngle.getText().toString()) : 0.0;
+                warningAngleValue = dangerAngleValue < 0.0 ? dangerAngleValue - (dangerAngleValue * warningInterpolationMultiplier) : 0.0;
 
-                dangerAngleFlapsValue   = isNumeric(dangerAngleFlaps.getText().toString()) ? Double.parseDouble(dangerAngleFlaps.getText().toString()) : 0.0;
-                warningAngleFlapsValue  = dangerAngleFlapsValue < 0.0 ? dangerAngleFlapsValue - (dangerAngleFlapsValue * warningInterpolationMultiplier) : 0.0;
+                dangerAngleFlapsValue = isNumeric(dangerAngleFlaps.getText().toString()) ? Double.parseDouble(dangerAngleFlaps.getText().toString()) : 0.0;
+                warningAngleFlapsValue = dangerAngleFlapsValue < 0.0 ? dangerAngleFlapsValue - (dangerAngleFlapsValue * warningInterpolationMultiplier) : 0.0;
 
                 warningAngleFlapsValue = warningAngleFlapsValue + 0;
 
@@ -963,6 +984,17 @@ public class MainActivity extends AppCompatActivity {
 
         if (deviceSpinner.getChildCount() > 0) {
             int deviceSelected = deviceSpinner.getSelectedItemPosition();
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Toast.makeText(getApplicationContext(),"Requires BLUETOOTH_CONNECT permission", Toast.LENGTH_LONG).show();
+                return;
+            }
             bluetoothGatt = devicesDiscovered.get(deviceSelected).connectGatt(this, false, btleGattCallback);
         } else {
             Toast.makeText(getApplicationContext(), "No sensors found.", Toast.LENGTH_LONG).show();
@@ -976,6 +1008,17 @@ public class MainActivity extends AppCompatActivity {
 
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(getApplicationContext(),"Requires BLUETOOTH_SCAN permission", Toast.LENGTH_LONG).show();
+            return;
+        }
         while (bluetoothManager.getConnectionState(bluetoothGatt.getDevice(), BluetoothProfile.GATT) != BluetoothGatt.STATE_DISCONNECTED) {
             bluetoothGatt.close();
             bluetoothGatt.disconnect();
@@ -1010,6 +1053,17 @@ public class MainActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    Toast.makeText(getApplicationContext(),"Requires BLUETOOTH_SCAN permission", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 btScanner.startScan(leScanCallback);
             }
         });
@@ -1033,6 +1087,17 @@ public class MainActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    Toast.makeText(getApplicationContext(),"Requires BLUETOOTH_SCAN permission", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 btScanner.stopScan(leScanCallback);
             }
         });
@@ -1054,7 +1119,6 @@ public class MainActivity extends AppCompatActivity {
                         peripheralTextView.append("Service disovered: " + uuid + "\n");
                     }
                 });
-
 
 
                 new ArrayList<HashMap<String, String>>();
@@ -1084,6 +1148,17 @@ public class MainActivity extends AppCompatActivity {
     private ScanCallback leScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Toast.makeText(getApplicationContext(),"Requires BLUETOOTH_CONNECT permission", Toast.LENGTH_LONG).show();
+                return;
+            }
             if (result.getDevice().getName() != null && result.getDevice().getName().equals("DanDerFlieger")) {
 
                 if (!devicesDiscovered.contains(result.getDevice())) {
@@ -1116,13 +1191,23 @@ public class MainActivity extends AppCompatActivity {
     private final BluetoothGattCallback btleGattCallback = new BluetoothGattCallback() {
 
 
-
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
 
             BluetoothGattService service = gatt.getService(ANGLE_SERVICE_UUID);
             BluetoothGattCharacteristic readingCharacteristic = service.getCharacteristic(READING_CHARACTERISTIC_UUID);
 
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Toast.makeText(getApplicationContext(),"Requires BLUETOOTH_CONNECT permission", Toast.LENGTH_LONG).show();
+                return;
+            }
             gatt.readCharacteristic(readingCharacteristic);
 
             DecimalFormat df = new DecimalFormat("#.#");
@@ -1157,11 +1242,11 @@ public class MainActivity extends AppCompatActivity {
 
 
                 String strTurnRateReading = df.format(turnRateReading);
-                float formattedTurnRateReading = Float.parseFloat( isNumeric(strTurnRateReading)?strTurnRateReading:"0.0");
+                float formattedTurnRateReading = Float.parseFloat(isNumeric(strTurnRateReading) ? strTurnRateReading : "0.0");
                 turnRateValue = isNumeric(turnRateOffset.getText().toString()) ? Double.parseDouble(turnRateOffset.getText().toString()) : 0.0f;
 
                 String strSlipSkidReading = dfTS.format(slipSkidReading);
-                float formattedSlipSkidReading = Float.parseFloat( isNumeric(strSlipSkidReading)?strSlipSkidReading:"0.0");
+                float formattedSlipSkidReading = Float.parseFloat(isNumeric(strSlipSkidReading) ? strSlipSkidReading : "0.0");
 
 
                 float finalAngleReading = angleReading;
@@ -1176,18 +1261,18 @@ public class MainActivity extends AppCompatActivity {
                         currentTurnRate.setText(strTurnRateReading);
                         currentSlipSkid.setText(strSlipSkidReading);
 
-                        if(aircraftLayout.getVisibility() == View.VISIBLE) {
-                            if(autoCalibrateDangerAngleSwitch.isChecked()) {
+                        if (aircraftLayout.getVisibility() == View.VISIBLE) {
+                            if (autoCalibrateDangerAngleSwitch.isChecked()) {
                                 float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
                                 if (calibratedReading < Float.parseFloat(dangerAngle.getText().toString())) {
-                                    dangerAngle.setText(String.format("%.1f",calibratedReading));
+                                    dangerAngle.setText(String.format("%.1f", calibratedReading));
                                 }
                             }
 
-                            if(autoCalibrateDangerAngleFlapsSwitch.isChecked()) {
+                            if (autoCalibrateDangerAngleFlapsSwitch.isChecked()) {
                                 float calibratedReading = formattedAngleReading - (float) levelCruiseAngleValue;
                                 if (calibratedReading < Float.parseFloat(dangerAngleFlaps.getText().toString())) {
-                                    dangerAngleFlaps.setText(String.format("%.1f",calibratedReading));
+                                    dangerAngleFlaps.setText(String.format("%.1f", calibratedReading));
                                 }
                             }
                         }
@@ -1277,23 +1362,22 @@ public class MainActivity extends AppCompatActivity {
                             airfoilCalibratedSlipSkidTextView.setText(String.format("%.2f", calibratedSlipSkidReading));
 
 
-
                             setAirfoilArcsPositions();
 
                             // Change the color of the airfoil, depending on its current value
-                                if (calibratedReading - 1.0f <= dangerAngleValue) {
-                                    // Turn it RED
-                                    airfoilPath.setFillColor(0xFFFF5555);
-                                    airfoilPath.setStrokeColor(0xFFCC2222);
+                            if (calibratedReading - 1.0f <= dangerAngleValue) {
+                                // Turn it RED
+                                airfoilPath.setFillColor(0xFFFF5555);
+                                airfoilPath.setStrokeColor(0xFFCC2222);
 //                                    } else if (calibratedReading - 1.0 <= warningAngleValue) {
 //                                        // Turn it YELLOW
 //                                        airfoilPath.setFillColor(0xFFFFFF55);
 //                                        airfoilPath.setStrokeColor(0xFFCCAA33);
-                                } else {
-                                    //Turn it BLUE
-                                    airfoilPath.setFillColor(0xFF9BBAF8);
-                                    airfoilPath.setStrokeColor(0xFF728FC8);
-                                }
+                            } else {
+                                //Turn it BLUE
+                                airfoilPath.setFillColor(0xFF9BBAF8);
+                                airfoilPath.setStrokeColor(0xFF728FC8);
+                            }
 
                             //airfoilImageView.invalidate();
 
@@ -1327,10 +1411,10 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             RotateAnimation rotateTurnAndSlipNeedle = new RotateAnimation(
-                                turnRateNeedleDegrees,
-                                turnRateNeedleDegrees,
-                                Animation.RELATIVE_TO_SELF, 0.5f,
-                                Animation.RELATIVE_TO_SELF, 0.5f
+                                    turnRateNeedleDegrees,
+                                    turnRateNeedleDegrees,
+                                    Animation.RELATIVE_TO_SELF, 0.5f,
+                                    Animation.RELATIVE_TO_SELF, 0.5f
                             );
                             rotateTurnAndSlipNeedle.setDuration(RECEIVE_INTERVAL);
                             rotateTurnAndSlipNeedle.setInterpolator(new FastOutSlowInInterpolator());
@@ -1338,7 +1422,7 @@ public class MainActivity extends AppCompatActivity {
 
                             float ballSway;
                             ImageView gauge = findViewById(R.id.TS_GaugeFace);
-                            int gaugeWidth = (gauge.getWidth()/3);
+                            int gaugeWidth = (gauge.getWidth() / 3);
                             float swayMultiplier = -250.0f;
 
                             if (!Float.isNaN(Float.parseFloat(ballReadingMultiplier.getText().toString()))) {
@@ -1354,11 +1438,11 @@ public class MainActivity extends AppCompatActivity {
 //                            }
 
                             if ((calibratedSlipSkidReading * swayMultiplier) > gaugeWidth) {
-                                ballSway = gaugeWidth/2;
+                                ballSway = gaugeWidth / 2;
                             } else if ((calibratedSlipSkidReading * swayMultiplier) < -gaugeWidth) {
-                                ballSway = -(gaugeWidth/2);
+                                ballSway = -(gaugeWidth / 2);
                             } else {
-                                ballSway = (calibratedSlipSkidReading * swayMultiplier)/2;
+                                ballSway = (calibratedSlipSkidReading * swayMultiplier) / 2;
                             }
 
                             ObjectAnimator slideSlipSkidBall = ObjectAnimator.ofFloat(airfoilTSBall, "translationX", ballSway);
@@ -1425,7 +1509,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         // Level Cruise Arc (Green)
                         RotateAnimation rotateAirfoilLevelArc = new RotateAnimation(
-                                -0.0f, -0.0f,  Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                                -0.0f, -0.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                         );
                         rotateAirfoilLevelArc.setDuration(1000);
                         rotateAirfoilLevelArc.setRepeatCount(Animation.INFINITE);
@@ -1433,7 +1517,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // Glide Path Arc (Blue)
                         RotateAnimation rotateAirfoilGlidePathArc = new RotateAnimation(
-                                -(float)((glidePathAngleValue) * ANGLE_MULTIPLIER), -(float)((glidePathAngleValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                                -(float) ((glidePathAngleValue) * ANGLE_MULTIPLIER), -(float) ((glidePathAngleValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                         );
                         rotateAirfoilGlidePathArc.setDuration(1000);
                         rotateAirfoilGlidePathArc.setRepeatCount(Animation.INFINITE);
@@ -1441,7 +1525,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // Warning Angle Arc (Yellow)
                         RotateAnimation rotateAirfoilWarningArc = new RotateAnimation(
-                                -(float)((warningAngleValue) * ANGLE_MULTIPLIER), -(float)((warningAngleValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                                -(float) ((warningAngleValue) * ANGLE_MULTIPLIER), -(float) ((warningAngleValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                         );
                         rotateAirfoilWarningArc.setDuration(1000);
                         rotateAirfoilWarningArc.setRepeatCount(Animation.INFINITE);
@@ -1449,7 +1533,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // Danger Angle Arc (Red)
                         RotateAnimation rotateAirfoilDangerArc = new RotateAnimation(
-                                -(float)((dangerAngleValue) * ANGLE_MULTIPLIER), -(float)((dangerAngleValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                                -(float) ((dangerAngleValue) * ANGLE_MULTIPLIER), -(float) ((dangerAngleValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                         );
                         rotateAirfoilDangerArc.setDuration(1000);
                         rotateAirfoilDangerArc.setRepeatCount(Animation.INFINITE);
@@ -1457,7 +1541,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // *** FLAPS *** Warning Angle Arc (Yellow)
                         RotateAnimation rotateAirfoilWarningFlapsArc = new RotateAnimation(
-                                -(float)((warningAngleFlapsValue) * ANGLE_MULTIPLIER), -(float)((warningAngleFlapsValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                                -(float) ((warningAngleFlapsValue) * ANGLE_MULTIPLIER), -(float) ((warningAngleFlapsValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                         );
                         rotateAirfoilWarningFlapsArc.setDuration(1000);
                         rotateAirfoilWarningFlapsArc.setRepeatCount(Animation.INFINITE);
@@ -1465,7 +1549,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // *** FLAPS *** Danger Angle Arc (Red)
                         RotateAnimation rotateAirfoilDangerFlapsArc = new RotateAnimation(
-                                -(float)((dangerAngleFlapsValue) * ANGLE_MULTIPLIER), -(float)((dangerAngleFlapsValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+                                -(float) ((dangerAngleFlapsValue) * ANGLE_MULTIPLIER), -(float) ((dangerAngleFlapsValue) * ANGLE_MULTIPLIER), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
                         );
                         rotateAirfoilDangerFlapsArc.setDuration(1000);
                         rotateAirfoilDangerFlapsArc.setRepeatCount(Animation.INFINITE);
@@ -1484,8 +1568,6 @@ public class MainActivity extends AppCompatActivity {
                 player = null;
             }
         }
-
-
 
 
         // this will get called when a bluetooth device connects or disconnects
@@ -1521,6 +1603,18 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                     // discover services and characteristics for this device
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        Toast.makeText(getApplicationContext(),"Requires BLUETOOTH_CONNECT permission", Toast.LENGTH_LONG).show();
+                        return;
+
+                    }
                     gatt.discoverServices();
 
                     break;
@@ -1549,6 +1643,17 @@ public class MainActivity extends AppCompatActivity {
                     BluetoothGattDescriptor readingDescriptor = readingCharacteristic.getDescriptor(DESCRIPTOR_UUID);
                     readingDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
 
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        Toast.makeText(getApplicationContext(),"Requires BLUETOOTH_CONNECT permission", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     gatt.writeDescriptor(readingDescriptor);
                     gatt.setCharacteristicNotification(readingCharacteristic, true);
                     gatt.writeCharacteristic(readingCharacteristic);
